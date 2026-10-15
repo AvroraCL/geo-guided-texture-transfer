@@ -16,7 +16,9 @@
 
 ## 怎么读
 
-浏览器打开 [`paper/index.html`](paper/index.html) 即可。打印（Ctrl/Cmd + P）可直接输出 A4 排版。
+**在线阅读：<https://avroracl.github.io/geo-guided-texture-transfer/>**
+
+或直接打开 [`paper/index.html`](paper/index.html)，也可下载后用浏览器打开；打印（Ctrl/Cmd + P）可直接输出 A4 排版。
 
 - 只关心工作安排：直接读第 4 章（可行性分层与实现分工）与第 7 章（下一步）
 - 不熟悉算法与人工智能：第 2.1 节专门解释了本文用到的两个概念

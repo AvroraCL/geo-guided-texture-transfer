@@ -1,0 +1,14 @@
+<svg viewBox="0 0 680 196" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>直线距离与沿表面距离的区别</title>
+<desc>碗口对边的两点，直线一跨即到，但沿碗面走需绕下碗底再爬上来，远得多。</desc>
+<path d="M120 60 L560 60" fill="none" stroke="#a32d2d" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="340" y="46" font-size="12.5" fill="#a32d2d" text-anchor="middle">直线距离，穿过空气</text>
+<path d="M120 60 Q 340 180 560 60" fill="none" stroke="#1a4b7c" stroke-width="2.6"/>
+<text x="340" y="150" font-size="12.5" fill="#1a4b7c" text-anchor="middle">沿表面走的距离，需绕下碗底</text>
+<circle cx="120" cy="60" r="6" fill="#1a4b7c"/>
+<circle cx="560" cy="60" r="6" fill="#1a4b7c"/>
+<text x="108" y="50" font-size="12.5" font-weight="600" fill="#1a4b7c" text-anchor="end">A</text>
+<text x="572" y="50" font-size="12.5" font-weight="600" fill="#1a4b7c">B</text>
+<rect x="60" y="164" width="560" height="28" rx="4" fill="#f8f7f4" stroke="#e3e1dc" stroke-width="0.6"/>
+<text x="76" y="178" font-size="12.5" fill="#4a4a45">判断谁跟谁挨着，只能看下面那条路，不能看上面那条</text>
+</svg>

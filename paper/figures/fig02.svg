@@ -1,0 +1,42 @@
+<svg viewBox="0 0 680 238" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>三维表面与 UV 空间的拓扑错配</title>
+<desc>左侧三维表面上 A、B、C 三点彼此相邻；展开为右侧 UV 空间后，三点分属三个互不相连的岛屿，相距很远。</desc>
+<defs>
+<marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<text x="50" y="26" font-size="13.5" font-weight="600" fill="#33332f">三维表面</text>
+<rect x="50" y="40" width="210" height="118" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<path d="M50 70 H260 M50 100 H260 M50 130 H260 M120 40 V158 M190 40 V158" fill="none" stroke="#ddd9d0" stroke-width="0.6" stroke-dasharray="3 3"/>
+<path d="M110 80 L150 105 L125 135 Z" fill="none" stroke="#1a4b7c" stroke-width="1.2"/>
+<circle cx="110" cy="80" r="5.5" fill="#1a4b7c"/>
+<circle cx="150" cy="105" r="5.5" fill="#1a4b7c"/>
+<circle cx="125" cy="135" r="5.5" fill="#1a4b7c"/>
+<text x="99" y="72" font-size="12" font-weight="600" fill="#1a4b7c" text-anchor="end">A</text>
+<text x="161" y="103" font-size="12" font-weight="600" fill="#1a4b7c">B</text>
+<text x="116" y="150" font-size="12" font-weight="600" fill="#1a4b7c" text-anchor="end">C</text>
+
+<path d="M272 100 L358 100" fill="none" stroke="#8b8b82" stroke-width="1.4" marker-end="url(#ar2)"/>
+<text x="315" y="88" font-size="12" fill="#8b8b82" text-anchor="middle">展开</text>
+
+<text x="390" y="26" font-size="13.5" font-weight="600" fill="#33332f">UV 空间</text>
+<rect x="390" y="40" width="240" height="118" rx="3" fill="#ffffff" stroke="#c9c7be" stroke-width="0.7"/>
+<rect x="402" y="52" width="72" height="38" rx="2" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<rect x="488" y="52" width="58" height="32" rx="2" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<rect x="402" y="100" width="52" height="48" rx="2" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<rect x="496" y="98" width="76" height="50" rx="2" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<rect x="586" y="52" width="36" height="30" rx="2" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<path d="M430 71 L424 124 L534 124" fill="none" stroke="#a32d2d" stroke-width="1.2" stroke-dasharray="4 3"/>
+<circle cx="430" cy="71" r="5" fill="#1a4b7c"/>
+<circle cx="424" cy="124" r="5" fill="#1a4b7c"/>
+<circle cx="534" cy="124" r="5" fill="#1a4b7c"/>
+<text x="438" y="68" font-size="12" font-weight="600" fill="#1a4b7c">A</text>
+<text x="416" y="134" font-size="12" font-weight="600" fill="#1a4b7c" text-anchor="end">B</text>
+<text x="542" y="134" font-size="12" font-weight="600" fill="#1a4b7c">C</text>
+
+<text x="50" y="178" font-size="12" fill="#5f5e5a">三点在表面上彼此相邻，沿表面走几步就到</text>
+<text x="390" y="178" font-size="12" fill="#5f5e5a">展开后分属不同岛屿，直线距离很远</text>
+<rect x="50" y="190" width="580" height="32" rx="4" fill="#f8f7f4" stroke="#e3e1dc" stroke-width="0.6"/>
+<text x="66" y="206" font-size="12.5" fill="#4a4a45">沿表面度量的距离，与 UV 图上的直线距离，不是同一回事</text>
+</svg>

@@ -171,6 +171,28 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   a{color:inherit; text-decoration:none}
   .b{color:#666}
 }
+
+/* AI 阅读与研究入口 */
+.aientry{margin:30px 0 8px; padding:22px 24px; border:1px solid var(--rule); border-radius:8px; background:#fbfbf9}
+.aientry h2{margin:0 0 10px; padding:0; border:0; font-size:17px}
+.aientry>p{font-size:14.5px; margin:0 0 14px}
+.modes{display:flex; gap:14px; flex-wrap:wrap; margin:0 0 14px}
+.mode{flex:1 1 200px; border:1px solid var(--rule); border-radius:6px; background:#fff; padding:14px 16px}
+.mode h3{margin:0 0 6px; font-size:14px; font-family:var(--font-sans)}
+.mode p{margin:0 0 10px; font-size:13.5px; color:var(--ink-2); line-height:1.65; text-indent:0}
+.mode button{font:inherit; font-size:13px; font-family:var(--font-sans); padding:5px 12px; border:1px solid #9db8cf; border-radius:4px; background:var(--accent-bg); color:var(--accent); cursor:pointer}
+.mode button:hover{background:#dfeaf5}
+.invite{margin:0; padding:12px 16px; background:#f8f7f4; border-left:3px solid var(--mark-line); font-size:13.5px; line-height:1.75; text-indent:0}
+.invite .en{color:var(--ink-2); font-style:italic}
+.aihelp{margin:12px 0 0; font-size:13px; color:var(--ink-2); text-indent:0}
+.aihelp a{color:var(--accent); margin-right:14px; white-space:nowrap}
+.copy-sec{font:inherit; font-size:11.5px; font-family:var(--font-sans); font-weight:400; padding:1px 8px; margin-left:10px; border:1px solid var(--rule); border-radius:3px; background:#fff; color:var(--muted); cursor:pointer; vertical-align:2px}
+.copy-sec:hover{border-color:#9db8cf; color:var(--accent)}
+.oq{margin:14px 0 0; padding:0; list-style:none; counter-reset:oq}
+.oq li{counter-increment:oq; position:relative; padding-left:2.2em; margin-bottom:9px; font-size:14.5px; line-height:1.7}
+.oq li::before{content:"Q" counter(oq); position:absolute; left:0; color:var(--accent); font-family:var(--font-sans); font-size:13px; font-weight:600}
+.toast{position:fixed; left:50%; bottom:32px; transform:translateX(-50%); background:#26261f; color:#fff; font-size:13.5px; padding:9px 18px; border-radius:5px; opacity:0; transition:opacity .18s; pointer-events:none; z-index:99}
+.toast.on{opacity:.94}
 </style>
 </head>
 <body>
@@ -211,7 +233,9 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <a href="#s56" class="s">5.6 失败条件</a>
   <a href="#s6">6 风险与局限</a>
   <a href="#s7">7 下一步</a>
+  <a href="#ai-entry">AI 阅读与研究</a>
   <a href="#app">附录 术语表</a>
+  <a href="#oq">公开研究问题</a>
   <a href="#ai">关于撰写方式</a>
   <a href="#refs">参考文献</a>
 </nav>
@@ -237,6 +261,43 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <p>本文面向熟悉 PBR 流程、但不熟悉图形算法与人工智能的美术从业者。UV、接缝、通道这些你们比我熟，本文不解释；反过来，<strong>凡涉及算法与模型的部分，本文一律先给类比，再给术语，并尽量配图</strong>。</p>
   <p>若只关心"哪些能做、哪些不能做、我该怎么安排手上的活"，可直接跳读第 4 章与第 7 章。</p>
   <p>本文由作者与人工智能助手协作完成，具体分工见文末「关于本文的撰写方式」。</p>
+</div>
+
+<div class="aientry" id="ai-entry">
+  <h2>使用 AI 阅读与研究</h2>
+  <p>本文同时欢迎人类与 AI 的贡献。你可以把本文交给任意 AI 助手（ChatGPT、Claude、Gemini、DeepSeek 等）——不绑定任何厂商，也不需要注册额外账号。选择一种模式，复制提示词，粘贴给你的 AI。</p>
+
+  <div class="modes">
+    <div class="mode">
+      <h3>一、理解研究</h3>
+      <p>按你的专业背景解释本文，把概念与真实设计工作流联系起来，并区分文献结论、作者经验与未验证假设。</p>
+      <button type="button" data-prompt="understand">复制提示词</button>
+    </div>
+    <div class="mode">
+      <h3>二、批判性审查</h3>
+      <p>要求 AI 独立审查，不默认作者正确：检查定义与推导、寻找反例、核查引用、指出不具备创新性的假设。</p>
+      <button type="button" data-prompt="review">复制提示词</button>
+    </div>
+    <div class="mode">
+      <h3>三、参与研究</h3>
+      <p>让具备检索、推导或编程能力的 AI 主动参与：比较文献、设计可证伪假设、构建最小实验、提出反例。</p>
+      <button type="button" data-prompt="contribute">复制提示词</button>
+    </div>
+  </div>
+
+  <p class="invite">
+    <span class="en">This research is open to both human and AI contributions. We welcome new ideas, reproducible experiments, critical reviews, and even evidence that challenges our current assumptions.</span><br>
+    本研究同时欢迎人类与 AI 的贡献。我们欢迎新思路、可复现实验、批判性审查，以及任何能够挑战现有假设的证据。
+  </p>
+
+  <p class="aihelp">
+    <a href="https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/paper/full.md">Markdown 原文</a>
+    <a href="https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/paper/context.md">研究上下文</a>
+    <a href="https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/research/open-questions.md">公开研究问题</a>
+    <a href="https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/research/hypotheses.md">假设与证据状态</a>
+    <a href="https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/CONTRIBUTING.md">贡献指南</a>
+    <a href="https://github.com/AvroraCL/geo-guided-texture-transfer/issues">Issues</a>
+  </p>
 </div>
 
 <section id="s1">
@@ -982,6 +1043,20 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 <p>第 4、5 两项尤为关键：在产出这两张图之前，关于延续问题严重程度的任何判断都只是估计。</p>
 </section>
 
+<section id="oq">
+<h2>公开研究问题</h2>
+<p>以下是目前尚未解决的问题，按优先级排列。每项在 <a href="https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/research/open-questions.md">open-questions.md</a> 中给出背景、已有研究、当前假设与可参与的具体任务。<strong>欢迎提供反例。</strong></p>
+<ol class="oq">
+  <li><strong>如何在保留既有 UV 的条件下建立高精度二维—三维映射？</strong><br><span style="font-size:13.5px;color:var(--ink-2)">整个研究的前提。约束 C1 规定 UV 不可重排，必须让映射适应既有布局。</span></li>
+  <li><strong>如何区分需要消除的 UV 接缝与需要保留的设计边界？</strong><br><span style="font-size:13.5px;color:var(--ink-2)">目前完全没有解法。分色线与投影错位在像素层面都是"颜色跳变"。</span></li>
+  <li><strong>如何解决不同正交视图之间的投影冲突？</strong><br><span style="font-size:13.5px;color:var(--ink-2)">AI 生成的多视图天然不一致，这是本场景与实拍照片路线的根本差异。</span></li>
+  <li><strong>如何在不改变原始设计的情况下处理未覆盖区域？</strong><br><span style="font-size:13.5px;color:var(--ink-2)">本文认定的唯一推演环节。其规模是否被高估，需先测量。</span></li>
+  <li><strong>如何量化跨曲面图案的结构连续性？</strong><br><span style="font-size:13.5px;color:var(--ink-2)">没有可信指标，就无法证伪任何假设。常规图像指标在跨接缝场景下失效。</span></li>
+  <li><strong>如何证明一种映射方法具备真实生产环境下的可靠性？</strong><br><span style="font-size:13.5px;color:var(--ink-2)">学术指标好不等于能进生产。工业界的验收标准几乎没有学术发表。</span></li>
+</ol>
+<p style="font-size:14px">参与方式见 <a href="https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>。发现错误、证明某条路线不可行、复现失败实验，与提出新算法同等有价值。提交 Issue 或 Pull Request 前需获得人类用户明确授权。</p>
+</section>
+
 <section id="ai">
 <h2>关于本文的撰写方式</h2>
 <p>本文由作者与人工智能助手（AI Agent）协作完成。考虑到读者需要判断其中哪些内容可信、哪些只是推断，现将分工如实说明如下。</p>
@@ -1045,6 +1120,203 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 </p>
 
 </article>
+
+
+<div class="toast" id="toast">已复制</div>
+<script>
+const BASE = 'https://avroracl.github.io/geo-guided-texture-transfer';
+
+const PROMPTS = {
+  understand: `你正在帮助一位读者理解一份研究文档。
+
+研究文档：《基于几何约束的多视图二维设计向复杂三维模型表面的高保真纹理转译技术》（OrthoTex）
+网页版：${BASE}/paper/index.html
+Markdown 原文：${BASE}/paper/full.md
+研究上下文：${BASE}/paper/context.md
+
+请先完整阅读上述文档，然后：
+
+1. 先问我的专业背景，再据此调整解释的深度与用词。不要一上来就讲术语。
+2. 解释研究背景、技术目标与核心术语。对"测地距离""条件注入""UV 参数化"等概念，先用类比说明，再给术语。
+3. 把文档中的概念与真实的三维设计工作流联系起来，不要停留在抽象层面。
+4. 明确区分三类内容：有文献支持的结论、作者的经验判断、尚未验证的假设。文档中用 [假设] [待补] [已核对] 标记，请如实转述，不要把假设讲成结论。
+5. 遇到复杂内容，循序渐进地解释，不要一次抛出全部术语。
+6. 如果我的问题超出文档范围，请明确说明这是文档之外的内容。
+
+不要编造文档中不存在的内容。如果某处你没有把握，直接说不确定。`,
+
+  review: `你正在独立审查一份研究文档。请不要默认作者正确。
+
+研究文档：《基于几何约束的多视图二维设计向复杂三维模型表面的高保真纹理转译技术》（OrthoTex）
+网页版：${BASE}/paper/index.html
+Markdown 原文：${BASE}/paper/full.md
+研究上下文：${BASE}/paper/context.md
+假设清单：${BASE}/research/hypotheses.md
+
+该文档目前处于方案设计阶段，尚未实现、未验证。请按以下方向审查：
+
+1. 检查定义与推导：文中概念是否自洽？有没有循环定义或未定义的术语？
+2. 寻找理论漏洞与反例：哪些论断可能是错的？请构造具体反例，不要只说"可能有问题"。
+3. 寻找更接近目标的已有成果：本文声称的研究空位是否真的存在？请检索并给出具体文献（含 DOI 或稳定链接）。特别注意工业界的实践，那里可能有未被学术文献覆盖的方案。
+4. 核查引用：文中引用的文献是否真实存在？是否与所引论点匹配？
+5. 指出可能不具备创新性的假设：文中哪些"新想法"其实已有等价做法？
+6. 识别不合理的约束与实验设计：六条硬约束（C1–C6）是否成立？第 5 章的假设是否可证伪？评价指标是否会被误用？
+
+要求：
+- 批评必须具体、有证据，并尽可能给出改进方向。
+- 不要为了批评而批评，也不要为了迎合而放过问题。
+- 如果你认为某个论断是对的，也可以说明理由，但请明确区分"我确认"与"我倾向于认为"。`,
+
+  contribute: `你正在参与 OrthoTex 开放研究项目（Geometry-Guided Texture Transfer）。
+
+项目地址：${BASE}/
+研究文档：${BASE}/paper/index.html
+Markdown 原文：${BASE}/paper/full.md
+研究上下文：${BASE}/paper/context.md
+公开问题：${BASE}/research/open-questions.md
+假设清单：${BASE}/research/hypotheses.md
+贡献指南：${BASE}/CONTRIBUTING.md
+
+请先完整阅读上述文档，理解研究目标、生产约束、已有成果与未解决问题。
+
+你不仅可以解释研究，也被鼓励主动寻找具有实际价值的研究贡献。
+
+请独立评估现有假设，检索相关文献，尝试数学推导，寻找反例，并在能力允许时设计或执行可复现实验。
+
+不要预设作者正确，也不要为了提出创新而制造不存在的问题。
+
+- 如果发现研究错误，请明确指出；
+- 如果找到更成熟的已有方案，请提供来源；
+- 如果提出新方法，请说明假设、适用条件、局限性与验证方式。
+
+优先解决真实复杂三维资产中的高保真纹理映射问题，而不是偏离研究目标去生成新的视觉内容。
+
+请将有价值的研究结果整理为结构化贡献，包括：问题、方法、证据、局限性、建议。
+
+如果具备 GitHub 操作能力，可以在用户明确授权后准备或提交 Issue、Pull Request。未经授权不得修改远程仓库。
+
+可优先考虑的方向（详见公开问题文档）：
+- 测量：纯投影在真实模型上的跨接缝跳变规模（成本最低，但可能否证整个课题前提）
+- 测量：未覆盖区域的实际占比
+- 形式化：把"图案延续"定义为可解问题，或证明它不可解
+- 检索：工业界的投影与贴花工具是否已有等价方案
+- 反例：构造能被候选评价指标骗过的测试案例`
+};
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove('on'), 1600);
+}
+
+function copyText(text, msg){
+  const done = () => toast(msg || '已复制');
+  if (navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(done, () => fallback(text, done));
+  } else {
+    fallback(text, done);
+  }
+}
+
+function fallback(text, done){
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); done(); } catch(e){ toast('复制失败，请手动选择'); }
+  document.body.removeChild(ta);
+}
+
+document.querySelectorAll('[data-prompt]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.getAttribute('data-prompt');
+    copyText(PROMPTS[key], '提示词已复制，粘贴给你的 AI 即可');
+  });
+});
+
+/* 章节级上下文复制 */
+function inlineMd(el){
+  let h = el.innerHTML;
+  h = h.replace(/<strong>(.*?)<\/strong>/g, '**$1**');
+  h = h.replace(/<em>(.*?)<\/em>/g, '*$1*');
+  h = h.replace(/<span class="b[^"]*">(.*?)<\/span>/g, '[$1]');
+  h = h.replace(/<br\s*\/?>/g, ' ');
+  h = h.replace(/<[^>]+>/g, '');
+  return h.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/\s+/g,' ').trim();
+}
+
+function tableMd(tb){
+  const rows = Array.from(tb.querySelectorAll('tr'));
+  let out = [];
+  rows.forEach((r, i) => {
+    const cells = Array.from(r.querySelectorAll('th,td')).map(c => inlineMd(c));
+    out.push('| ' + cells.join(' | ') + ' |');
+    if (i === 0) out.push('|' + '---|'.repeat(cells.length));
+  });
+  return out.join('\n');
+}
+
+function sectionMd(sec){
+  const h2 = sec.querySelector('h2');
+  let title = '';
+  if (h2){
+    title = Array.from(h2.childNodes)
+      .filter(n => n.nodeType === 3 || n.tagName !== 'BUTTON')
+      .map(n => n.textContent).join('').replace(/\s+/g,' ').trim();
+  }
+  let out = '## ' + title + '\n\n';
+  Array.from(sec.children).forEach(el => {
+    const tag = el.tagName.toLowerCase();
+    if (tag === 'h2') return;
+    if (tag === 'h3'){ out += '### ' + inlineMd(el) + '\n\n'; return; }
+    if (tag === 'h4'){ out += '#### ' + inlineMd(el) + '\n\n'; return; }
+    if (tag === 'p'){
+      const t = inlineMd(el);
+      if (t) out += t + '\n\n';
+      return;
+    }
+    if (tag === 'figure'){
+      const cap = el.querySelector('figcaption');
+      if (cap) out += '*' + inlineMd(cap) + '*\n\n';
+      return;
+    }
+    if (tag === 'table'){ out += tableMd(el) + '\n\n'; return; }
+    if (tag === 'ul' || tag === 'ol'){
+      Array.from(el.querySelectorAll(':scope > li')).forEach((li, i) => {
+        out += (tag === 'ol' ? (i+1) + '. ' : '- ') + inlineMd(li) + '\n';
+      });
+      out += '\n';
+      return;
+    }
+    if (tag === 'div' && (el.classList.contains('box') || el.classList.contains('warn'))){
+      const lbl = el.querySelector('.boxlbl');
+      if (lbl) out += '> **' + inlineMd(lbl) + '**\n>\n';
+      el.querySelectorAll('p:not(.boxlbl)').forEach(p => { out += '> ' + inlineMd(p) + '\n>\n'; });
+      out += '\n';
+      return;
+    }
+  });
+  return out.trim();
+}
+
+document.querySelectorAll('article section > h2').forEach(h2 => {
+  const sec = h2.closest('section');
+  if (!sec) return;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'copy-sec';
+  btn.textContent = '复制本节';
+  btn.title = '以 Markdown 复制本节，便于交给 AI';
+  btn.addEventListener('click', () => {
+    copyText(sectionMd(sec), '本节已复制为 Markdown');
+  });
+  h2.appendChild(btn);
+});
+</script>
 
 </body>
 </html>

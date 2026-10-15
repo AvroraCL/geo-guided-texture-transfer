@@ -1,27 +1,27 @@
 <svg viewBox="0 0 680 210" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
 <title>接缝的两种表示方式</title>
 <desc>左侧为硬切分，接缝是一条实线，图案在两侧断开且不对齐；右侧为权重场，靠近接缝处权重高、远离处权重低，图案可跨越接缝连续过渡。</desc>
-<text x="60" y="26" font-size="13.5" font-weight="600" fill="#33332f">硬切分：非此即彼</text>
-<rect x="60" y="42" width="115" height="90" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
-<rect x="185" y="42" width="125" height="90" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
-<rect x="72" y="66" width="58" height="28" rx="3" fill="#7F77DD"/>
-<rect x="207" y="88" width="58" height="28" rx="3" fill="#7F77DD"/>
-<line x1="178" y1="42" x2="178" y2="132" stroke="#a32d2d" stroke-width="2.5"/>
-<text x="60" y="152" font-size="12" fill="#5f5e5a">图案在两侧断开，且不对齐</text>
+<text x="60" y="26" font-size="13.5" font-weight="600" fill="var(--f-ink)">硬切分：非此即彼</text>
+<rect x="60" y="42" width="115" height="90" rx="3" fill="var(--f-fill)" stroke="var(--f-line)" stroke-width="0.7"/>
+<rect x="185" y="42" width="125" height="90" rx="3" fill="var(--f-fill)" stroke="var(--f-line)" stroke-width="0.7"/>
+<rect x="72" y="66" width="58" height="28" rx="3" fill="var(--f-purple)"/>
+<rect x="207" y="88" width="58" height="28" rx="3" fill="var(--f-purple)"/>
+<line x1="178" y1="42" x2="178" y2="132" stroke="var(--f-red)" stroke-width="2.5"/>
+<text x="60" y="152" font-size="12" fill="var(--f-ink3)">图案在两侧断开，且不对齐</text>
 
-<text x="370" y="26" font-size="13.5" font-weight="600" fill="#33332f">权重场：连续过渡</text>
-<rect x="370" y="42" width="59" height="90" fill="#dbe9f7"/>
-<rect x="429" y="42" width="28" height="90" fill="#85B7EB"/>
-<rect x="457" y="42" width="28" height="90" fill="#378ADD"/>
-<rect x="495" y="42" width="28" height="90" fill="#378ADD"/>
-<rect x="523" y="42" width="28" height="90" fill="#85B7EB"/>
-<rect x="551" y="42" width="69" height="90" fill="#dbe9f7"/>
-<rect x="370" y="42" width="115" height="90" rx="3" fill="none" stroke="#9db8cf" stroke-width="0.7"/>
-<rect x="495" y="42" width="125" height="90" rx="3" fill="none" stroke="#9db8cf" stroke-width="0.7"/>
-<rect x="440" y="68" width="100" height="38" rx="3" fill="#7F77DD"/>
-<line x1="488" y1="42" x2="488" y2="132" stroke="#c8a35a" stroke-width="1" stroke-dasharray="3 3"/>
-<text x="370" y="152" font-size="12" fill="#5f5e5a">越靠近接缝权重越高，可连续衰减</text>
+<text x="370" y="26" font-size="13.5" font-weight="600" fill="var(--f-ink)">权重场：连续过渡</text>
+<rect x="370" y="42" width="59" height="90" fill="var(--f-blue-xl)"/>
+<rect x="429" y="42" width="28" height="90" fill="var(--f-blue-l)"/>
+<rect x="457" y="42" width="28" height="90" fill="var(--f-blue)"/>
+<rect x="495" y="42" width="28" height="90" fill="var(--f-blue)"/>
+<rect x="523" y="42" width="28" height="90" fill="var(--f-blue-l)"/>
+<rect x="551" y="42" width="69" height="90" fill="var(--f-blue-xl)"/>
+<rect x="370" y="42" width="115" height="90" rx="3" fill="none" stroke="var(--f-blue-line)" stroke-width="0.7"/>
+<rect x="495" y="42" width="125" height="90" rx="3" fill="none" stroke="var(--f-blue-line)" stroke-width="0.7"/>
+<rect x="440" y="68" width="100" height="38" rx="3" fill="var(--f-purple)"/>
+<line x1="488" y1="42" x2="488" y2="132" stroke="var(--f-amber)" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="370" y="152" font-size="12" fill="var(--f-ink3)">越靠近接缝权重越高，可连续衰减</text>
 
-<rect x="60" y="166" width="560" height="32" rx="4" fill="#f8f7f4" stroke="#e3e1dc" stroke-width="0.6"/>
-<text x="76" y="182" font-size="12.5" fill="#4a4a45">权重的两个来源：到接缝的距离　｜　该处在游戏中的视觉显著性</text>
+<rect x="60" y="166" width="560" height="32" rx="4" fill="var(--f-fill2)" stroke="var(--f-line3)" stroke-width="0.6"/>
+<text x="76" y="182" font-size="12.5" fill="var(--f-ink2)">权重的两个来源：到接缝的距离　｜　该处在游戏中的视觉显著性</text>
 </svg>

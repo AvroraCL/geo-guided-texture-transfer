@@ -1,16 +1,16 @@
 <svg viewBox="0 0 680 210" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
 <title>按视觉显著性分配权重</title>
 <desc>载具的顶面与正面玩家常看，权重高；底面与结构内侧几乎看不到，权重低。</desc>
-<polygon points="340,30 460,65 340,100 220,65" fill="#378ADD" stroke="#185FA5" stroke-width="0.7"/>
-<polygon points="220,65 340,100 340,155 220,120" fill="#85B7EB" stroke="#185FA5" stroke-width="0.7"/>
-<polygon points="340,100 460,65 460,120 340,155" fill="#dbe9f7" stroke="#7fa8c9" stroke-width="0.7"/>
-<text x="340" y="65" font-size="12" font-weight="600" fill="#ffffff" text-anchor="middle">顶面</text>
-<text x="280" y="110" font-size="12" font-weight="600" fill="#0d3350" text-anchor="middle">正面</text>
-<text x="400" y="110" font-size="12" font-weight="600" fill="#3d5f7a" text-anchor="middle">侧面</text>
-<text x="490" y="62" font-size="13" font-weight="600" fill="#1a4b7c">玩家常看到</text>
-<text x="490" y="82" font-size="12.5" fill="#5f5e5a">顶面、正面 → 权重高</text>
-<text x="490" y="116" font-size="13" font-weight="600" fill="#8a6d2f">几乎看不到</text>
-<text x="490" y="136" font-size="12.5" fill="#5f5e5a">底面、内侧 → 权重低</text>
-<rect x="40" y="168" width="600" height="28" rx="4" fill="#f8f7f4" stroke="#e3e1dc" stroke-width="0.6"/>
-<text x="56" y="182" font-size="12.5" fill="#4a4a45">同一个权重场里，可见程度不同，要求的严格程度也就不同</text>
+<polygon points="340,30 460,65 340,100 220,65" fill="var(--f-blue)" stroke="var(--f-blue-d)" stroke-width="0.7"/>
+<polygon points="220,65 340,100 340,155 220,120" fill="var(--f-blue-l)" stroke="var(--f-blue-d)" stroke-width="0.7"/>
+<polygon points="340,100 460,65 460,120 340,155" fill="var(--f-blue-xl)" stroke="var(--f-blue-m)" stroke-width="0.7"/>
+<text x="340" y="65" font-size="12" font-weight="600" fill="var(--f-white)" text-anchor="middle">顶面</text>
+<text x="280" y="110" font-size="12" font-weight="600" fill="var(--f-blue-ink)" text-anchor="middle">正面</text>
+<text x="400" y="110" font-size="12" font-weight="600" fill="var(--f-blue-ink2)" text-anchor="middle">侧面</text>
+<text x="490" y="62" font-size="13" font-weight="600" fill="var(--f-accent)">玩家常看到</text>
+<text x="490" y="82" font-size="12.5" fill="var(--f-ink3)">顶面、正面 → 权重高</text>
+<text x="490" y="116" font-size="13" font-weight="600" fill="var(--f-amber-ink)">几乎看不到</text>
+<text x="490" y="136" font-size="12.5" fill="var(--f-ink3)">底面、内侧 → 权重低</text>
+<rect x="40" y="168" width="600" height="28" rx="4" fill="var(--f-fill2)" stroke="var(--f-line3)" stroke-width="0.6"/>
+<text x="56" y="182" font-size="12.5" fill="var(--f-ink2)">同一个权重场里，可见程度不同，要求的严格程度也就不同</text>
 </svg>

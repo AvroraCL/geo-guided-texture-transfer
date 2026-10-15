@@ -5,23 +5,23 @@
 <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
 </marker>
 </defs>
-<rect x="4" y="24" width="116" height="44" rx="5" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
-<text x="62" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="#33332f">自然语言需求</text>
-<text x="62" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#8b8b82">模糊意图</text>
-<path d="M122 46 L140 46" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar)"/>
-<rect x="142" y="24" width="116" height="44" rx="5" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
-<text x="200" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="#33332f">大语言模型</text>
-<text x="200" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#8b8b82">结构化意图</text>
-<path d="M260 46 L278 46" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar)"/>
-<rect x="280" y="24" width="116" height="44" rx="5" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
-<text x="338" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="#33332f">图像生成模型</text>
-<text x="338" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#8b8b82">三视图与素材</text>
-<path d="M398 46 L416 46" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar)"/>
-<rect x="418" y="24" width="116" height="44" rx="5" fill="#fbf6ec" stroke="#c8a35a" stroke-width="1.1"/>
-<text x="476" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" font-weight="600" fill="#8a6d2f">中间层</text>
-<text x="476" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#8a6d2f">缺失</text>
-<path d="M536 46 L554 46" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar)"/>
-<rect x="556" y="24" width="118" height="44" rx="5" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
-<text x="615" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="#33332f">可用涂装</text>
-<text x="615" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#8b8b82">合规贴图</text>
+<rect x="4" y="24" width="116" height="44" rx="5" fill="var(--f-fill)" stroke="var(--f-line)" stroke-width="0.6"/>
+<text x="62" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="var(--f-ink)">自然语言需求</text>
+<text x="62" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="var(--f-mute)">模糊意图</text>
+<path d="M122 46 L140 46" fill="none" stroke="var(--f-mute)" stroke-width="1.3" marker-end="url(#ar)"/>
+<rect x="142" y="24" width="116" height="44" rx="5" fill="var(--f-fill)" stroke="var(--f-line)" stroke-width="0.6"/>
+<text x="200" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="var(--f-ink)">大语言模型</text>
+<text x="200" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="var(--f-mute)">结构化意图</text>
+<path d="M260 46 L278 46" fill="none" stroke="var(--f-mute)" stroke-width="1.3" marker-end="url(#ar)"/>
+<rect x="280" y="24" width="116" height="44" rx="5" fill="var(--f-fill)" stroke="var(--f-line)" stroke-width="0.6"/>
+<text x="338" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="var(--f-ink)">图像生成模型</text>
+<text x="338" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="var(--f-mute)">三视图与素材</text>
+<path d="M398 46 L416 46" fill="none" stroke="var(--f-mute)" stroke-width="1.3" marker-end="url(#ar)"/>
+<rect x="418" y="24" width="116" height="44" rx="5" fill="var(--f-amber-bg)" stroke="var(--f-amber)" stroke-width="1.1"/>
+<text x="476" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" font-weight="600" fill="var(--f-amber-ink)">中间层</text>
+<text x="476" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="var(--f-amber-ink)">缺失</text>
+<path d="M536 46 L554 46" fill="none" stroke="var(--f-mute)" stroke-width="1.3" marker-end="url(#ar)"/>
+<rect x="556" y="24" width="118" height="44" rx="5" fill="var(--f-fill)" stroke="var(--f-line)" stroke-width="0.6"/>
+<text x="615" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="var(--f-ink)">可用涂装</text>
+<text x="615" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="var(--f-mute)">合规贴图</text>
 </svg>

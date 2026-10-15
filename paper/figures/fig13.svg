@@ -1,20 +1,20 @@
 <svg viewBox="0 0 680 200" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
 <title>跨接缝采样点的可见性分类</title>
 <desc>12.5% 两侧有共同可见视图，2.7% 两侧可见但视图不同，22.4% 仅一侧可见，62.3% 两侧都不可见。</desc>
-<text x="40" y="28" font-size="13.5" font-weight="600" fill="#33332f">跨 UV 接缝采样点：两侧可见情况（258,540 点）</text>
-<rect x="40" y="46" width="85" height="46" fill="#378ADD"/>
-<rect x="125" y="46" width="18" height="46" fill="#85B7EB"/>
-<rect x="143" y="46" width="152" height="46" fill="#c8a35a"/>
-<rect x="295" y="46" width="345" height="46" fill="#c9c7be"/>
-<text x="82" y="75" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">12.5%</text>
-<text x="219" y="75" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">22.4%</text>
-<text x="467" y="75" font-size="13" font-weight="700" fill="#4a4a45" text-anchor="middle">62.3%</text>
-<rect x="40" y="104" width="14" height="14" fill="#378ADD"/>
-<text x="62" y="116" font-size="12.5" fill="#33332f">两侧有共同可见视图 —— 投影值必然相同，不存在误差</text>
-<rect x="40" y="126" width="14" height="14" fill="#85B7EB"/>
-<text x="62" y="138" font-size="12.5" fill="#33332f">两侧可见但视图不同（2.7%）—— 需靠视图间协调</text>
-<rect x="40" y="148" width="14" height="14" fill="#c8a35a"/>
-<text x="62" y="160" font-size="12.5" fill="#8a6d2f">仅一侧可见（22.4%）—— 遮挡造成的信息缺口</text>
-<rect x="40" y="170" width="14" height="14" fill="#c9c7be"/>
-<text x="62" y="182" font-size="12.5" fill="#5f5e5a">两侧都不可见（62.3%）—— 多为内部结构（座舱内、缝隙）</text>
+<text x="40" y="28" font-size="13.5" font-weight="600" fill="var(--f-ink)">跨 UV 接缝采样点：两侧可见情况（258,540 点）</text>
+<rect x="40" y="46" width="85" height="46" fill="var(--f-blue)"/>
+<rect x="125" y="46" width="18" height="46" fill="var(--f-blue-l)"/>
+<rect x="143" y="46" width="152" height="46" fill="var(--f-amber)"/>
+<rect x="295" y="46" width="345" height="46" fill="var(--f-line)"/>
+<text x="82" y="75" font-size="13" font-weight="700" fill="var(--f-white)" text-anchor="middle">12.5%</text>
+<text x="219" y="75" font-size="13" font-weight="700" fill="var(--f-white)" text-anchor="middle">22.4%</text>
+<text x="467" y="75" font-size="13" font-weight="700" fill="var(--f-ink2)" text-anchor="middle">62.3%</text>
+<rect x="40" y="104" width="14" height="14" fill="var(--f-blue)"/>
+<text x="62" y="116" font-size="12.5" fill="var(--f-ink)">两侧有共同可见视图 —— 投影值必然相同，不存在误差</text>
+<rect x="40" y="126" width="14" height="14" fill="var(--f-blue-l)"/>
+<text x="62" y="138" font-size="12.5" fill="var(--f-ink)">两侧可见但视图不同（2.7%）—— 需靠视图间协调</text>
+<rect x="40" y="148" width="14" height="14" fill="var(--f-amber)"/>
+<text x="62" y="160" font-size="12.5" fill="var(--f-amber-ink)">仅一侧可见（22.4%）—— 遮挡造成的信息缺口</text>
+<rect x="40" y="170" width="14" height="14" fill="var(--f-line)"/>
+<text x="62" y="182" font-size="12.5" fill="var(--f-ink3)">两侧都不可见（62.3%）—— 多为内部结构（座舱内、缝隙）</text>
 </svg>

@@ -23,15 +23,14 @@
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
-  margin:0; background:var(--page); color:var(--ink);
+  margin:0; background:#fff; color:var(--ink);
   font-family:var(--font-serif);
   font-size:16px; line-height:1.78;
 }
 
 /* 纸张：直角细边，不要阴影 */
 .paper{
-  max-width:780px; margin:36px auto; background:var(--paper);
-  padding:64px 72px 80px; border:1px solid #e2e0da;
+  max-width:720px; margin:0 auto; padding:60px 28px 100px;
 }
 
 /* 标题页 */
@@ -46,7 +45,7 @@ body{
 .tp .affil{font-size:13px; color:var(--muted); margin:0}
 
 /* 摘要：小一号字，左右缩进 */
-.abstract{margin:28px 0 32px; padding:0 28px}
+.abstract{margin:28px 0 32px; padding:0 20px}
 .abstract .lbl{
   font-family:var(--font-sans);
   font-size:14px; font-weight:700; text-align:center;
@@ -144,7 +143,7 @@ em{font-style:italic}
 
 /* 侧边目录：宽屏浮动于纸张之外 */
 nav.toc{
-  position:fixed; top:40px; left:calc(50% - 640px);
+  position:fixed; top:40px; left:calc(50% - 570px);
   width:190px; font-family:var(--font-sans); font-size:12.5px; line-height:1.6;
   max-height:88vh; overflow-y:auto;
 }
@@ -152,10 +151,10 @@ nav.toc .t{font-weight:700; font-size:11.5px; color:var(--muted); letter-spacing
 nav.toc a{display:block; color:var(--ink-2); text-decoration:none; padding:2px 0}
 nav.toc a:hover{color:var(--accent)}
 nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
-@media(max-width:1500px){nav.toc{display:none}}
+@media(max-width:1420px){nav.toc{display:none}}
 
 @media(max-width:760px){
-  .paper{margin:0 auto; padding:32px 20px 48px; border:0}
+  .paper{padding:36px 20px 64px}
   .tp h1{font-size:20px}
   body{font-size:15.5px}
   .abstract{padding:0 8px}

@@ -1,0 +1,9 @@
+{
+  "vertices": 125882,
+  "unique_positions": 125777,
+  "dup_positions": 105,
+  "dup_extra_vertices": 105,
+  "faces": 216694,
+  "coverage_noformal": 0.48484576556639103,
+  "coverage_exp02": 0.8039
+}

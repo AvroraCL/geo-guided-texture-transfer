@@ -1,0 +1,9 @@
+{
+  "resolution": 512,
+  "total_faces": 216694,
+  "total_area": 269.982884090259,
+  "seen_faces": 17954,
+  "seen_area": 92.90294747315068,
+  "coverage_camera_ray": 0.3441068043487229,
+  "coverage_exp02": 0.8039
+}

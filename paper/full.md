@@ -53,7 +53,7 @@
 
 This research is open to both human and AI contributions. We welcome new ideas, reproducible experiments, critical reviews, and even evidence that challenges our current assumptions. 本研究同时欢迎人类与 AI 的贡献。我们欢迎新思路、可复现实验、批判性审查，以及任何能够挑战现有假设的证据。
 
-[Markdown 原文](https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/paper/full.md) [研究上下文](https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/paper/context.md) [公开研究问题](https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/research/open-questions.md) [假设与证据状态](https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/research/hypotheses.md) [贡献指南](https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/CONTRIBUTING.md) [Issues](https://github.com/AvroraCL/geo-guided-texture-transfer/issues)
+[切换深色 / 浅色](#) [Markdown 原文](https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/paper/full.md) [研究上下文](https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/paper/context.md) [公开研究问题](https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/research/open-questions.md) [假设与证据状态](https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/research/hypotheses.md) [贡献指南](https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/CONTRIBUTING.md) [Issues](https://github.com/AvroraCL/geo-guided-texture-transfer/issues)
 
 ## 1 问题的提出
 

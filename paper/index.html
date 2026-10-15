@@ -245,12 +245,14 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 
 /* 主题切换按钮 */
 #themer{
-  position:fixed; right:18px; bottom:18px; z-index:60;
-  width:38px; height:38px; border-radius:50%;
+  position:fixed; top:14px; right:14px; z-index:9999;
+  height:32px; padding:0 14px; border-radius:16px;
   border:1px solid var(--rule); background:var(--surface);
-  color:var(--ink-2); font-size:16px; line-height:1; cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-  opacity:.62; transition:opacity .15s;
+  color:var(--ink-2); font-size:13px; font-family:var(--font-sans);
+  line-height:1; cursor:pointer; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:6px;
+  box-shadow:0 1px 4px rgba(0,0,0,.10);
+  opacity:.85; transition:opacity .15s;
 }
 #themer:hover{ opacity:1; }
 @media print{ #themer{ display:none; } }
@@ -366,6 +368,7 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   </p>
 
   <p class="aihelp">
+    <a href="#" id="themer-link">切换深色 / 浅色</a>
     <a href="https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/paper/full.md">Markdown 原文</a>
     <a href="https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/paper/context.md">研究上下文</a>
     <a href="https://github.com/AvroraCL/geo-guided-texture-transfer/blob/main/research/open-questions.md">公开研究问题</a>
@@ -1495,24 +1498,26 @@ document.querySelectorAll('article section > h2').forEach(h2 => {
 });
 </script>
 
-<button id="themer" type="button" title="切换深色 / 浅色" aria-label="切换深色 / 浅色">◐</button>
+<button id="themer" type="button" title="切换深色 / 浅色" aria-label="切换深色 / 浅色">☾ 深色</button>
 <script>
 (function(){
   var b = document.getElementById('themer');
-  if(!b) return;
+  var link = document.getElementById('themer-link');
+  function isDark(){ return document.documentElement.getAttribute('data-theme') === 'dark'; }
   function upd(){
-    var d = document.documentElement.getAttribute('data-theme') === 'dark';
-    b.textContent = d ? '☀' : '☾';
-    b.title = d ? '切换到浅色' : '切换到深色';
+    if(b){ b.textContent = isDark() ? '☀ 浅色' : '☾ 深色'; }
+    if(link){ link.textContent = isDark() ? '切换到浅色' : '切换到深色'; }
+  }
+  function toggle(e){
+    if(e && e.preventDefault){ e.preventDefault(); }
+    var nxt = isDark() ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', nxt);
+    try{ localStorage.setItem('orthotex-theme', nxt); }catch(err){}
+    upd();
   }
   upd();
-  b.addEventListener('click', function(){
-    var cur = document.documentElement.getAttribute('data-theme');
-    var nxt = cur === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', nxt);
-    try{ localStorage.setItem('orthotex-theme', nxt); }catch(e){}
-    upd();
-  });
+  if(b){ b.addEventListener('click', toggle); }
+  if(link){ link.addEventListener('click', toggle); }
 })();
 </script>
 

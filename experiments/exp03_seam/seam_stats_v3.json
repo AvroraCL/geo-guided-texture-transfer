@@ -1,0 +1,30 @@
+{
+  "seams": 43090,
+  "samples": 258540,
+  "both_common_view": 32301,
+  "cross_view": 7094,
+  "one_only": 58036,
+  "none_visible": 161109,
+  "occluded": {
+    "vehicle#cockpit_8": 9346,
+    "vehicle#fuse_109": 9181,
+    "vehicle#tail_176": 5857,
+    "vehicle#seat_01_7": 1973,
+    "vehicle#blister1_110": 1804,
+    "vehicle#airbrake_r_179": 919,
+    "vehicle#airbrake_l_177": 862,
+    "vehicle#airbrake_l1_178": 769,
+    "vehicle#nozzle1_19_80": 741,
+    "vehicle#airbrake_r1_180": 735,
+    "vehicle#hook_183": 733,
+    "vehicle#nozzle1_22_83": 695,
+    "vehicle#nozzle1_21_82": 602,
+    "vehicle#nozzle1_23_84": 595,
+    "vehicle#nozzle1_30_91": 571,
+    "vehicle#nozzle1_20_81": 566,
+    "vehicle#rudder_181": 517,
+    "vehicle#nozzle1_8_76": 488,
+    "vehicle#nozzle1_38_104": 473,
+    "vehicle#wing_l_122": 473
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "seams": 300349,
+  "samples": 2402792,
+  "both_visible": 0,
+  "one_visible": 597047,
+  "none_visible": 1805745,
+  "diff_mean": null,
+  "diff_median": null,
+  "diff_max": null,
+  "occluded_by_object": {
+    "vehicle#fuse_109": 141577,
+    "vehicle#cockpit_8": 126459,
+    "vehicle#seat_01_7": 30385,
+    "vehicle#blister1_110": 28292,
+    "vehicle#wheel_c_194": 23551,
+    "vehicle#tail_176": 21840,
+    "vehicle#wheel_r_162": 21171,
+    "vehicle#wheel_l_136": 21008,
+    "vehicle#wing_l_122": 19486,
+    "vehicle#wing_r_148": 18828,
+    "vehicle#elevon1_r_149": 5296,
+    "vehicle#rudder_181": 5149,
+    "vehicle#elevon1_l_123": 5086,
+    "vehicle#elevon_r_150": 4781,
+    "vehicle#airbrake_r_179": 4284,
+    "vehicle#elevon_l_124": 4051,
+    "vehicle#airbrake_l_177": 3968,
+    "vehicle#nozzle1_20_81": 3913,
+    "vehicle#nozzle1_24_85": 3908,
+    "vehicle#nozzle1_25_86": 3902
+  }
+}

@@ -504,6 +504,34 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 <p><strong>输入</strong>包括：一组多视图二维设计稿（以正交视图为主）<span class="b">待补</span>　视图数量与具体视角尚待明确，是否附带相机参数亦待明确；目标三维网格及其既定 UV 布局；可选的结构化设计意图描述，由大语言模型自自然语言需求产出。</p>
 <p><strong>输出</strong>为满足 C1 至 C6 的贴图集合，并保留可编辑的中间产物。</p>
 
+<p>此处须强调一点：<strong>正交视图并不能覆盖物体的全部表面</strong>。对凸形物体，三个方向确实足够；但游戏模型多为凹形，一旦出现凹陷与自遮挡，就会留下任何视图都触及不到的缺口。这不是分辨率问题，也不是拍摄角度问题，而是几何本身决定的。</p>
+
+<figure>
+<svg viewBox="0 0 680 200" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>正交视图无法覆盖的凹陷区域</title>
+<desc>一个带倒扣槽的物体截面。槽口窄、内腔宽，内腔的上下壁在任何正交方向下都被自身遮挡，形成信息缺口。</desc>
+<defs>
+<marker id="arG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<path d="M180 50 L340 50 L340 150 L180 150 L180 110 L210 110 L210 130 L270 130 L270 70 L210 70 L210 90 L180 90 Z" fill="#f4f3ef" stroke="#9a9890" stroke-width="1"/>
+<line x1="210" y1="70" x2="270" y2="70" stroke="#a32d2d" stroke-width="2.4"/>
+<line x1="210" y1="130" x2="270" y2="130" stroke="#a32d2d" stroke-width="2.4"/>
+<path d="M115 100 L172 100" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#arG)"/>
+<path d="M250 20 L250 44" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#arG)"/>
+<path d="M250 180 L250 156" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#arG)"/>
+<text x="108" y="90" font-size="12" fill="#5f5e5a" text-anchor="end">左视</text>
+<text x="262" y="26" font-size="12" fill="#5f5e5a">俯视</text>
+<text x="262" y="186" font-size="12" fill="#5f5e5a">仰视</text>
+<text x="372" y="76" font-size="13" font-weight="600" fill="#a32d2d">槽口窄，内腔宽</text>
+<text x="372" y="100" font-size="12.5" fill="#5f5e5a">内腔的上下壁</text>
+<text x="372" y="120" font-size="12.5" fill="#5f5e5a">在任何正交方向下</text>
+<text x="372" y="140" font-size="12.5" fill="#5f5e5a">都被自身遮挡</text>
+</svg>
+<figcaption>图 6　正交视图无法覆盖的凹陷区域。红线所标的内腔上下壁，三个方向都看不到，设计稿上自然也没有它们的信息。</figcaption>
+</figure>
+
 <h3 id="s32">3.2 三个子问题</h3>
 <ol>
   <li><strong>对应</strong>：设计稿上的图案元素落在 UV 的哪一位置。属几何问题，工具相对成熟。</li>
@@ -547,7 +575,7 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 
 <text x="331" y="108" font-size="12" fill="#8a6d2f" text-anchor="middle">延续是本文认定的难点：它没有可供计算的输入，只能推演</text>
 </svg>
-<figcaption>图 6　中间层的三个子问题及其性质。延续环节不具有唯一正确解，因而无法由确定性算法给出。</figcaption>
+<figcaption>图 7　中间层的三个子问题及其性质。延续环节不具有唯一正确解，因而无法由确定性算法给出。</figcaption>
 </figure>
 
 <h3 id="s33">3.3 设计空间</h3>
@@ -582,8 +610,6 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 <p>路线 C 中尚有一个必须单独决定的问题：接缝应当如何表示。</p>
 <p>现有做法以<strong>硬切分</strong>为主 [3]，即把接缝视为硬边界，在图块边界处精确切开。其优点是边界精确，缺点则是非此即彼：要么对齐，要么切断，不存在中间态。</p>
 <p>另一种表示是<strong>权重场</strong>，即为每一 UV 位置赋予一个连续值，用以表示其靠近接缝的程度，或跨接缝的连接应当有多强。连续量有两点直接优势。其一，它可进入损失函数，亦可作为条件注入生成模型，而硬约束难以优化。其二，它允许对不同接缝区别对待，而非一视同仁。</p>
-<p><span class="b">假设</span>　权重场的取值除几何距离之外，还应纳入<strong>视觉显著性</strong>，即该处在游戏中的可见程度。理由在于，游戏资产的质量要求是"玩家看得到的地方不出错"，而非整张贴图平均美观；这一要求与既有研究的目标并不相同，因而在既有文献中未见处理。</p>
-
 <figure>
 <svg viewBox="0 0 680 210" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
 <title>接缝的两种表示方式</title>
@@ -612,7 +638,30 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 <rect x="60" y="166" width="560" height="32" rx="4" fill="#f8f7f4" stroke="#e3e1dc" stroke-width="0.6"/>
 <text x="76" y="182" font-size="12.5" fill="#4a4a45">权重的两个来源：到接缝的距离　｜　该处在游戏中的视觉显著性</text>
 </svg>
-<figcaption>图 7　接缝的两种表示方式。左为硬切分，右为权重场；后者可进入损失函数，亦可用作生成模型的条件。</figcaption>
+<figcaption>图 8　接缝的两种表示方式。左为硬切分，右为权重场；后者可进入损失函数，亦可用作生成模型的条件。</figcaption>
+</figure>
+
+<p>权重还有第二个来源需要考虑。<span class="b">假设</span>　除几何距离之外，权重还应纳入<strong>视觉显著性</strong>，即该处在游戏中究竟有多容易被看到。</p>
+<p>理由在于，游戏资产的质量要求是"玩家看得到的地方不出错"，而非整张贴图平均美观。载具的顶面与正面玩家时时在看，底面与结构内侧几乎无人过问。把这两者一视同仁，等于把算力平均撒在一整张贴图上。</p>
+
+<figure>
+<svg viewBox="0 0 680 210" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>按视觉显著性分配权重</title>
+<desc>载具的顶面与正面玩家常看，权重高；底面与结构内侧几乎看不到，权重低。</desc>
+<polygon points="340,30 460,65 340,100 220,65" fill="#378ADD" stroke="#185FA5" stroke-width="0.7"/>
+<polygon points="220,65 340,100 340,155 220,120" fill="#85B7EB" stroke="#185FA5" stroke-width="0.7"/>
+<polygon points="340,100 460,65 460,120 340,155" fill="#dbe9f7" stroke="#7fa8c9" stroke-width="0.7"/>
+<text x="340" y="65" font-size="12" font-weight="600" fill="#ffffff" text-anchor="middle">顶面</text>
+<text x="280" y="110" font-size="12" font-weight="600" fill="#0d3350" text-anchor="middle">正面</text>
+<text x="400" y="110" font-size="12" font-weight="600" fill="#3d5f7a" text-anchor="middle">侧面</text>
+<text x="490" y="62" font-size="13" font-weight="600" fill="#1a4b7c">玩家常看到</text>
+<text x="490" y="82" font-size="12.5" fill="#5f5e5a">顶面、正面 → 权重高</text>
+<text x="490" y="116" font-size="13" font-weight="600" fill="#8a6d2f">几乎看不到</text>
+<text x="490" y="136" font-size="12.5" fill="#5f5e5a">底面、内侧 → 权重低</text>
+<rect x="40" y="168" width="600" height="28" rx="4" fill="#f8f7f4" stroke="#e3e1dc" stroke-width="0.6"/>
+<text x="56" y="182" font-size="12.5" fill="#4a4a45">同一个权重场里，可见程度不同，要求的严格程度也就不同</text>
+</svg>
+<figcaption>图 9　按视觉显著性分配权重。这一步把"整张贴图平均好看"换成"玩家看得见的地方不出错"。</figcaption>
 </figure>
 
 <div class="warn">
@@ -634,6 +683,46 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <tr><td>5</td><td>以已覆盖区域为硬锚点，补全未覆盖区域</td><td><strong>猜</strong></td><td>完整贴图</td><td><span class="b b-u">未验证</span></td></tr>
   <tr><td>6</td><td>校验接缝连续性、覆盖率与规范符合度，不达标处交回人工</td><td>算</td><td>校验报告与待修区域标记</td><td><span class="b b-ok">已验证</span></td></tr>
 </table>
+
+<figure>
+<svg viewBox="0 0 680 192" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>路线 C 的六个执行步骤及其性质</title>
+<desc>六步依次为渲染视图与提 UV 岛、投影设计稿、构建权重场、标注未覆盖区、推演填充、校验与回改；其中只有第五步属于推演。</desc>
+<defs>
+<marker id="arS" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect x="40" y="25" width="180" height="52" rx="4" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="130" y="45" font-size="13" font-weight="600" fill="#33332f" text-anchor="middle">① 渲染视图、提 UV 岛</text>
+<text x="130" y="63" font-size="11.5" fill="#8b8b82" text-anchor="middle">算</text>
+<path d="M222 51 L244 51" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#arS)"/>
+<rect x="250" y="25" width="180" height="52" rx="4" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="340" y="45" font-size="13" font-weight="600" fill="#33332f" text-anchor="middle">② 投影设计稿</text>
+<text x="340" y="63" font-size="11.5" fill="#8b8b82" text-anchor="middle">算</text>
+<path d="M432 51 L454 51" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#arS)"/>
+<rect x="460" y="25" width="180" height="52" rx="4" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="550" y="45" font-size="13" font-weight="600" fill="#33332f" text-anchor="middle">③ 构建接缝权重场</text>
+<text x="550" y="63" font-size="11.5" fill="#8b8b82" text-anchor="middle">算</text>
+
+<path d="M550 77 L550 91 L130 91 L130 103" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#arS)"/>
+
+<rect x="40" y="105" width="180" height="52" rx="4" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="130" y="125" font-size="13" font-weight="600" fill="#33332f" text-anchor="middle">④ 标注未覆盖区</text>
+<text x="130" y="143" font-size="11.5" fill="#8b8b82" text-anchor="middle">算</text>
+<path d="M222 131 L244 131" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#arS)"/>
+<rect x="250" y="105" width="180" height="52" rx="4" fill="#fbf6ec" stroke="#c8a35a" stroke-width="1.2"/>
+<text x="340" y="125" font-size="13" font-weight="600" fill="#8a6d2f" text-anchor="middle">⑤ 推演填充</text>
+<text x="340" y="143" font-size="11.5" fill="#8a6d2f" text-anchor="middle">猜 ← 风险都在这</text>
+<path d="M432 131 L454 131" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#arS)"/>
+<rect x="460" y="105" width="180" height="52" rx="4" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="550" y="125" font-size="13" font-weight="600" fill="#33332f" text-anchor="middle">⑥ 校验与回改</text>
+<text x="550" y="143" font-size="11.5" fill="#8b8b82" text-anchor="middle">算</text>
+
+<text x="340" y="180" font-size="12.5" fill="#5f5e5a" text-anchor="middle">六步之中只有第 5 步需要"猜"；其余五步即使第 5 步做不成，也已构成可用的辅助工具</text>
+</svg>
+<figcaption>图 10　路线 C 的六个执行步骤。灰底为确定性计算，琥珀色为唯一的推演环节。</figcaption>
+</figure>
 
 <p>表中第 1、2、4、6 步均属确定性计算，可以先行工具化，此即 4.3 节阶段零的全部内容。第 3 步依赖一个尚未敲定的显著性定义。第 5 步是唯一需要"猜"的环节，<strong>全部研究风险集中于此处</strong>。</p>
 <p>这一拆分有一层实际意义：即便第 5 步始终做不好，前四步加第六步也已经构成一套可用的辅助工具——它能自动完成投影、自动标出哪些地方没设计信息、自动检查接缝与规范，剩下的由人补。这比现在的纯手流程已经前进一大截。</p>

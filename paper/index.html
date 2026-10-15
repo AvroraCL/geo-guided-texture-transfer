@@ -226,11 +226,12 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <a href="#s44" class="s">4.4 判断准则</a>
   <a href="#s5">5 验证方案</a>
   <a href="#s51" class="s">5.1 假设与否证条件</a>
-  <a href="#s52" class="s">5.2 最小实验方案</a>
-  <a href="#s53" class="s">5.3 数据</a>
-  <a href="#s54" class="s">5.4 评价指标</a>
-  <a href="#s55" class="s">5.5 对照与消融</a>
-  <a href="#s56" class="s">5.6 失败条件</a>
+  <a href="#s52" class="s">5.2 已执行的实验</a>
+  <a href="#s53" class="s">5.3 最小实验方案</a>
+  <a href="#s54" class="s">5.4 数据</a>
+  <a href="#s55" class="s">5.5 评价指标</a>
+  <a href="#s56" class="s">5.6 对照与消融</a>
+  <a href="#s57" class="s">5.7 失败条件与后续</a>
   <a href="#s6">6 风险与局限</a>
   <a href="#s7">7 下一步</a>
   <a href="#ai-entry">AI 阅读与研究</a>
@@ -252,7 +253,7 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 <div class="abstract">
   <p class="lbl">摘 要</p>
   <p>在游戏外观模改的实际生产中，多视图二维设计稿（正交视图）向三维模型表面贴图的转换，至今仍高度依赖人工。图像生成模型已能产出高质量的设计参考与素材，大语言模型已能将模糊的自然语言需求转译为结构化设计意图，但二者均无法完成从<strong>外观分布</strong>到<strong>UV 空间对应</strong>这一环节，即参考图上"长这样"的图案究竟对应模型表面哪一位置、跨过 UV 接缝后应如何接续。</p>
-  <p>本文提出，该环节构成一个独立且当前未被充分解决的<strong>中间层问题</strong>。其难点不在投影——投影已有成熟工具——而在<strong>延续</strong>：多视图天然存在信息缺口，背面、凹陷与自遮挡区域缺乏设计信息，图案必须被合理推演填充。本文结合游戏资产生产的六条硬约束，给出该中间层的输入输出契约、三个子问题的分解、三条候选技术路线及其取舍，并设计相应的验证方案。本文不提出新的生成模型，亦不声称已有实现。</p>
+  <p>本文提出，该环节构成一个独立且当前未被充分解决的<strong>中间层问题</strong>。其难点不在投影——投影已有成熟工具——而在<strong>延续</strong>：多视图天然存在信息缺口，背面、凹陷与自遮挡区域缺乏设计信息，图案必须被合理推演填充。本文结合游戏资产生产的六条硬约束，给出该中间层的输入输出契约、三个子问题的分解、三条候选技术路线及其取舍，并设计相应的验证方案。<strong>其中两项验证已完成执行：实测三视图对飞机本体的覆盖率为 80.39%；并证明了跨 UV 接缝的图案错位并非由投影造成——需要补全的是表面中根本不存在设计信息的部分。</strong>本文不提出新的生成模型。</p>
   <p class="kw"><b>关键词：</b>纹理转译；UV 空间；接缝连续性；多视图设计稿；游戏资产生产；中间层</p>
 </div>
 
@@ -465,8 +466,9 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <li>将该工程断层<strong>界定</strong>为一个可研究的问题，并给出其形式化描述；</li>
   <li>给出该问题的<strong>硬约束清单</strong>与输入输出契约；</li>
   <li>梳理<strong>设计空间</strong>，列出候选路线并分析其取舍；</li>
-  <li>设计<strong>尚未执行</strong>的验证方案。</li>
+  <li>设计验证方案，<strong>并完成其中两项的执行</strong>（覆盖率与跨接缝误差，见 5.2 节）。</li>
 </ol>
+<p>第 5.2 节记录的两项实验已验证一项假设、否证另一项，并据此调整了后续方向。</p>
 </section>
 
 <section id="s2">
@@ -913,7 +915,7 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 
 <div class="warn">
   <p class="boxlbl">状态声明</p>
-  <p>本节为<strong>方案设计</strong>，尚未产生任何实验数据。凡"实验表明"式的表述均不得出现在后续版本中，除非本节已被实际执行。本节所有阈值均为<strong>待定</strong>，须由预备实验确定，不得事先拍定——事先拍定阈值会使后续结论失去意义。</p>
+  <p>本节分两部分：<strong>5.2 节为已实际执行的实验</strong>（2026-10-16，脚本与原始数据见仓库 <code>experiments/</code>），5.3 节起为尚未执行的方案设计。已执行部分的所有数值均来自脚本实际运行，可复现；未执行部分的阈值<strong>仍为待定</strong>，须由预备实验确定，不得事先拍定。</p>
 </div>
 
 <h3 id="s51">5.1 待验证假设及其否证条件</h3>
@@ -942,9 +944,91 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <li><strong>否证条件</strong>：出现任何必须人工逐面处理的环节。需注意区分"逐面操作"与"整体性参数调整"——后者属正常工程操作，不构成否证。</li>
 </ul>
 
-<h3 id="s52">5.2 最小实验方案</h3>
+<h3 id="s52">5.2 已执行的实验</h3>
+<p>截至 2026-10-16，本文设计的验证方案中已有两项完成执行。以下记录实际结果；全部脚本、原始数据与失败记录见仓库 <code>experiments/</code>，可复现。</p>
+
+<p class="tabcap">表 5　已执行实验一览</p>
+<table>
+  <tr><th style="width:12%">编号</th><th style="width:24%">实验</th><th style="width:14%">对应假设</th><th>结果</th></tr>
+  <tr><td>exp00</td><td>素材诊断</td><td>—</td><td>343,843 个三角面；10,616 个 UV 岛；76,234 条真 UV 接缝</td></tr>
+  <tr><td>exp01</td><td>基准正交视图</td><td>—</td><td>6 张视图与相机参数，供后续实验共用</td></tr>
+  <tr><td>exp02</td><td>三视图覆盖率</td><td><strong>A2</strong></td><td><strong>未覆盖率 19.61%</strong>；假设成立</td></tr>
+  <tr><td>exp03</td><td>跨 UV 接缝误差</td><td><strong>A1</strong></td><td><strong>投影无误差</strong>；原命题被否证</td></tr>
+</table>
+
+<h4>5.2.1 素材诊断</h4>
+<p>测试对象为一个真实游戏资产：F-16XL 战斗机模型，343,843 个三角面，15 个材质。诊断结果：UV 岛 <strong>10,616 个</strong>，真 UV 接缝（同材质内）<strong>76,234 条</strong>，平均每岛约 32 个面。接缝密度高于人工整理的典型值，符合 1.3 节所述"复杂三维网格"的特征。</p>
+
+<h4>5.2.2 三视图覆盖率（对应 A2）</h4>
+<p>统计范围为飞机本体，排除武器挂载与起落架（这些部件在实际涂装中套用原有贴图，不做设计）。判定方式为射线遮挡检测，非"UV 上是否有颜色"。</p>
+
+<figure>
+<svg viewBox="0 0 680 180" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>三视图覆盖率的实测结果</title>
+<desc>飞机本体被三个正交视图覆盖的比例为 80.39%，未覆盖 19.61%。</desc>
+<text x="40" y="30" font-size="13.5" font-weight="600" fill="#33332f">飞机本体：三视图覆盖率实测</text>
+<rect x="40" y="48" width="560" height="44" rx="3" fill="#dbe9f7" stroke="#9db8cf" stroke-width="0.7"/>
+<rect x="40" y="48" width="450" height="44" rx="3" fill="#378ADD"/>
+<text x="265" y="76" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle">已覆盖 80.39%</text>
+<text x="505" y="76" font-size="15" font-weight="700" fill="#a32d2d" text-anchor="middle">未覆盖 19.61%</text>
+<text x="40" y="118" font-size="12.5" fill="#5f5e5a">各视图单独可见比例（三者有重叠，非简单相加）：</text>
+<rect x="40" y="130" width="120" height="26" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="100" y="148" font-size="12.5" fill="#33332f" text-anchor="middle">前视 38.8%</text>
+<rect x="172" y="130" width="120" height="26" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="232" y="148" font-size="12.5" fill="#33332f" text-anchor="middle">侧视 39.3%</text>
+<rect x="304" y="130" width="120" height="26" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="364" y="148" font-size="12.5" fill="#33332f" text-anchor="middle">顶视 43.1%</text>
+<text x="440" y="148" font-size="12" fill="#8b8b82">共 216,694 个三角面</text>
+</svg>
+<figcaption>图 11　三视图覆盖率的实测结果。这三个视图是设计师实际使用的一组，不是全部六个方向。</figcaption>
+</figure>
+
+
+<figure>
+<img src="../experiments/exp02_coverage/heat/f_16xl.png" alt="机身 UV 热图" style="max-width:100%; height:auto; border:1px solid var(--rule)">
+<figcaption>图 12　机身 UV 贴图上的覆盖分布（实测产出）。灰色区域三视图能看到，红色区域三个视图都看不到，即设计稿中没有对应信息的位置。这是脚本对 187,077 个机身三角面逐个做射线遮挡检测后的实际结果。</figcaption>
+</figure>
+
+<p>实测<strong>覆盖率 80.39%，未覆盖率 19.61%</strong>。对照 A2 的否证条件（未覆盖占比小于 5%），该假设<strong>成立</strong>：未覆盖区域确实存在且规模不小，约五分之一的表面没有设计稿信息。</p>
+
+<h4>5.2.3 跨 UV 接缝误差（对应 A1）</h4>
+<p>对 43,090 条真 UV 接缝各采样 6 点，在三个正交视图下分别判定接缝两侧的可见性，共 258,540 个采样点。</p>
+
+<figure>
+<svg viewBox="0 0 680 200" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>跨接缝采样点的可见性分类</title>
+<desc>12.5% 两侧有共同可见视图，2.7% 两侧可见但视图不同，22.4% 仅一侧可见，62.3% 两侧都不可见。</desc>
+<text x="40" y="28" font-size="13.5" font-weight="600" fill="#33332f">跨 UV 接缝采样点：两侧可见情况（258,540 点）</text>
+<rect x="40" y="46" width="85" height="46" fill="#378ADD"/>
+<rect x="125" y="46" width="18" height="46" fill="#85B7EB"/>
+<rect x="143" y="46" width="152" height="46" fill="#c8a35a"/>
+<rect x="295" y="46" width="345" height="46" fill="#c9c7be"/>
+<text x="82" y="75" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">12.5%</text>
+<text x="219" y="75" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">22.4%</text>
+<text x="467" y="75" font-size="13" font-weight="700" fill="#4a4a45" text-anchor="middle">62.3%</text>
+<rect x="40" y="104" width="14" height="14" fill="#378ADD"/>
+<text x="62" y="116" font-size="12.5" fill="#33332f">两侧有共同可见视图 —— 投影值必然相同，不存在误差</text>
+<rect x="40" y="126" width="14" height="14" fill="#85B7EB"/>
+<text x="62" y="138" font-size="12.5" fill="#33332f">两侧可见但视图不同（2.7%）—— 需靠视图间协调</text>
+<rect x="40" y="148" width="14" height="14" fill="#c8a35a"/>
+<text x="62" y="160" font-size="12.5" fill="#8a6d2f">仅一侧可见（22.4%）—— 遮挡造成的信息缺口</text>
+<rect x="40" y="170" width="14" height="14" fill="#c9c7be"/>
+<text x="62" y="182" font-size="12.5" fill="#5f5e5a">两侧都不可见（62.3%）—— 多为内部结构（座舱内、缝隙）</text>
+</svg>
+<figcaption>图 13　跨接缝采样点的可见性分类（实测）。投影在两侧被同一视图看到时不产生任何误差，缺口全部来自可见性。</figcaption>
+</figure>
+
+<p><strong>结论一：投影本身在跨接缝处不产生误差。</strong>当接缝两侧被同一视图看到时，两侧的 UV 位置对应的是同一个三维点，投影函数连续，因此投影结果必然完全相同。这是数学结论而非拟合结果。实测中 12.5% 的采样点属于这种情况。</p>
+<p><strong>结论二：缺口全部来自可见性。</strong>22.4% 的采样点仅一侧可见，62.3% 两侧都不可见。</p>
+<p><strong>由此，A1 的原始命题被否证。</strong>1.2 节所设想的"视觉信息必须被在两个拓扑结构不同的空间之间搬运"这一难点，在<strong>纯几何投影</strong>的意义上并不成立——跨接缝的图案不会因投影而错位。真正的问题被重新定位为：<strong>表面中根本不存在设计信息的部分，如何合理补全</strong>。这与 3.2 节所称的"延续"是同一个问题。</p>
+
+<h4>5.2.4 一项操作者的经验数据</h4>
+<p>该资产的实际涂装制作者（累计完成 200 余项涂装）提供了以下工作耗时：从获取三视图、绘制定位标记到在纹理软件中对齐，约 <strong>10–20 分钟</strong>；绘制遮罩约 <strong>10–30 分钟</strong>。制作者同时指出，"飞机很少出现三视图看不到的地方"，这类位置（进气道、尾喷口）通常手工处理即可。</p>
+<p>这一经验与 5.2.2 的实测并不矛盾，而是互补：19.61% 的未覆盖区域中，<strong>相当一部分属于玩家不可见或无需设计的内部结构</strong>。区分"确实需要设计却看不到"与"本来就不需要设计"的比例，是本方案尚未完成的部分，列入 5.7 节的后续工作。</p>
+
+<h3 id="s53">5.3 最小实验方案</h3>
 <p>本节的目的不是全面评测，而是以最小成本暴露问题。建议规模如下，不建议一开始就做大。</p>
-<p class="tabcap">表 5　最小实验方案</p>
+<p class="tabcap">表 6　最小实验方案</p>
 <table>
   <tr><th style="width:18%">项目</th><th>内容</th></tr>
   <tr><td>对象</td><td><strong>一个</strong>真实复杂硬表面模型（取自作者日常处理的载具模型）。要求：UV 岛数量达到实际生产量级，且至少包含一处凹陷或自遮挡区域。</td></tr>
@@ -954,11 +1038,11 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <tr><td>产出</td><td>三组贴图 + 六项指标（5.4 节）+ 失败案例记录。<strong>失败案例是本实验的主要产出</strong>，不是副产品。</td></tr>
 </table>
 
-<h3 id="s53">5.3 数据</h3>
+<h3 id="s54">5.4 数据</h3>
 <p><span class="b">待补</span>　需确定：模型数量与复杂度梯度，是否包含高亏格、薄壁、自遮挡严重的样本；设计稿来源为人工绘制抑或生成；是否设置真值参照。就最小实验而言，以上均暂按单一样本处理。</p>
 
-<h3 id="s54">5.4 评价指标</h3>
-<p class="tabcap">表 6　拟采用的评价指标</p>
+<h3 id="s55">5.5 评价指标</h3>
+<p class="tabcap">表 7　拟采用的评价指标</p>
 <table>
   <tr><th style="width:20%">指标</th><th style="width:40%">说明</th><th style="width:20%">测量方式</th><th>性质</th></tr>
   <tr><td>设计保真度</td><td>结果与设计稿的感知相似度</td><td>逐视图渲染后与设计稿比对</td><td>客观</td></tr>
@@ -975,7 +1059,7 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <p>同理，图案边缘几何偏差必须<strong>独立于设计保真度</strong>测量。二者可能互相掩盖：整体相似度高，不等于图案边缘没有偏移。</p>
 </div>
 
-<h3 id="s55">5.5 对照与消融</h3>
+<h3 id="s56">5.6 对照与消融</h3>
 <p>三条基线，按复杂度递增：</p>
 <ul>
   <li><strong>B1　纯投影</strong>：按相机参数投影设计稿，重叠区平均融合。无表面邻接约束，无补全。</li>
@@ -985,7 +1069,7 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 <p>消融项至少包含：表面邻接约束的开关；权重场的开关（含"仅几何距离"与"几何距离 + 视觉显著性"两种取值的对比，用以检验 3.5 节的假设）；推演环节的开关。</p>
 <p><span class="b">待补</span>　若条件允许，应增加一条外部基线——工业软件的现有投影与贴花流程。缺少它，无法回答"本方法相对现有工具是否真的更好"。</p>
 
-<h3 id="s56">5.6 预设失败条件</h3>
+<h3 id="s57">5.7 预设失败条件与后续</h3>
 <p>为避免事后找补，在此先行写定：</p>
 <ul>
   <li>若 H1 在预设数据上未达成，或下降幅度未超过运行波动，则判定表面邻接约束无效；</li>
@@ -993,6 +1077,14 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <li>上述任一条成立时，按 3.4 节的退化路径退回：优先保住可编辑性，退回路线 A，未覆盖区域改为半自动处理。</li>
 </ul>
 <p>阈值 <span class="b">待补</span>　须由预备实验确定。</p>
+<h4>后续工作清单</h4>
+<p>基于 5.2 节的实测结果，以下工作按优先级排列：</p>
+<ol>
+  <li><strong>区分「需设计却看不到」与「无需设计」</strong>。5.2.2 测得的 19.61% 未覆盖率中，包含内部结构与玩家不可见部位。两者的比例决定「延续」问题的真实规模，也决定 3.4 节推荐路线 C 是否仍有必要。</li>
+  <li><strong>多模型验证</strong>。现有结论基于单一模型，需扩大样本。</li>
+  <li><strong>重新定义 A3</strong>。原命题（几何约束降低跨缝跳变）已被 5.2.3 否证，应改为可直接检验的形式，例如「补全结果在未覆盖区域的可接受度」。</li>
+  <li>核对 1.3 节六条硬约束的普遍性，见 5.2.4 节的操作者经验。</li>
+</ol>
 </section>
 
 <section id="s6">
@@ -1003,6 +1095,8 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <li><strong>规模风险</strong><span class="b">待补</span>　数十万面量级下，沿表面度量的计算开销是否可接受，本文未做估算。</li>
   <li><strong>样本偏差</strong>：现有判断来自单一从业者的实践，未经交叉验证。</li>
   <li><strong>披露风险</strong>：若后续考虑专利申请，公开技术细节之前应先完成申请。</li>
+  <li><strong>样本局限</strong>：已完成的验证（5.2 节）只针对<strong>单一模型</strong>——F-16XL 战斗机。该模型 UV 碎裂程度较高（10,616 个岛），可能不代表全部资产类型。在其他模型、其他资产类别上的结论尚不可知。</li>
+  <li><strong>经验数据的样本偏差</strong>：5.2.4 节引用的操作者经验（200 余项涂装）仍来自<strong>单一从业者</strong>，虽比 1.3 节的约束清单有了更具体的量化，但同样未经交叉验证。</li>
   <li><strong>检索范围风险</strong>：本文文献检索基于公开数据库（Crossref、arXiv 等），范围有限。正文中凡出现"未见""尚无"一类表述，均系就该检索范围而言，不构成全称判断，也不应被读作该问题无人研究。</li>
 </ul>
 </section>
@@ -1014,13 +1108,14 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <li>补齐 3.1 节输入契约的细节，明确视图数量以及是否附带相机参数；</li>
   <li>交叉验证 1.3 节的硬约束清单，确认其为行业共识而非个人习惯；</li>
   <li>确定最小可行验证的规模，建议先取单一模型、单一设计稿，跑通端到端，再论指标；</li>
-  <li>执行第 5 节方案，或先执行其中的最小子集。</li>
+  <li><strong>继续执行 5 节方案</strong>。已完成的 A1、A2 见 5.2 节；后续优先级见 5.7 节，其中最紧要的是区分「确实需要设计却看不到」与「本来就不需要设计」的比例——5.2.2 测得的 19.61% 未覆盖率中，后者的占比尚未确定。</li>
+  <li><strong>补充多模型验证</strong>。现有结论基于单一模型，需在同一流程下测试更多资产，确认 UV 碎裂程度、自遮挡规模不同的模型是否给出相近结论。</li>
 </ol>
 </section>
 
 <section id="app">
 <h2>附录　术语对照</h2>
-<p class="tabcap">表 7　常用说法与术语对照</p>
+<p class="tabcap">表 8　常用说法与术语对照</p>
 <table>
   <tr><th style="width:40%">常用说法</th><th>术语</th></tr>
   <tr><td>把三维表面摊平成平面的坐标</td><td>UV 参数化</td></tr>

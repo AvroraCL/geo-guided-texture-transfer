@@ -1,0 +1,17 @@
+<svg viewBox="0 0 680 180" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>三视图覆盖率的实测结果</title>
+<desc>飞机本体被三个正交视图覆盖的比例为 80.39%，未覆盖 19.61%。</desc>
+<text x="40" y="30" font-size="13.5" font-weight="600" fill="#33332f">飞机本体：三视图覆盖率实测</text>
+<rect x="40" y="48" width="560" height="44" rx="3" fill="#dbe9f7" stroke="#9db8cf" stroke-width="0.7"/>
+<rect x="40" y="48" width="450" height="44" rx="3" fill="#378ADD"/>
+<text x="265" y="76" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle">已覆盖 80.39%</text>
+<text x="505" y="76" font-size="15" font-weight="700" fill="#a32d2d" text-anchor="middle">未覆盖 19.61%</text>
+<text x="40" y="118" font-size="12.5" fill="#5f5e5a">各视图单独可见比例（三者有重叠，非简单相加）：</text>
+<rect x="40" y="130" width="120" height="26" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="100" y="148" font-size="12.5" fill="#33332f" text-anchor="middle">前视 38.8%</text>
+<rect x="172" y="130" width="120" height="26" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="232" y="148" font-size="12.5" fill="#33332f" text-anchor="middle">侧视 39.3%</text>
+<rect x="304" y="130" width="120" height="26" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="364" y="148" font-size="12.5" fill="#33332f" text-anchor="middle">顶视 43.1%</text>
+<text x="440" y="148" font-size="12" fill="#8b8b82">共 216,694 个三角面</text>
+</svg>

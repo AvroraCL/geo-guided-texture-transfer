@@ -756,4 +756,4 @@ UniTex [1] 从多视角照片重建贴图，走的是与本文**相反**的一�
 19. A. Sheffer, E. Praun, K. Rose. Mesh parameterization methods and their applications. *Foundations and Trends in Computer Graphics and Vision*, 2(2), 2006. DOI: 10.1561/9781933019895.
 20. B. Purnomo, J. D. Cohen, S. Kumar. Seamless texture atlases. In *Proceedings of the Eurographics/ACM SIGGRAPH Symposium on Geometry Processing*, 2004. DOI: 10.1145/1057432.1057441.
 
-草案 v2.0 ｜ 2026 年 10 月 ｜ AvroraCL 本文采用 [知识共享署名 4.0 国际许可协议（CC BY 4.0）](https://creativecommons.org/licenses/by/4.0/)进行许可：可自由转载、改编与商用，须署名 AvroraCL。 自存档研究文档，未投稿、未实现、未验证。
+草案 v2.1 ｜ 2026 年 10 月 ｜ AvroraCL 本文采用 [知识共享署名 4.0 国际许可协议（CC BY 4.0）](https://creativecommons.org/licenses/by/4.0/)进行许可：可自由转载、改编与商用，须署名 AvroraCL。 自存档研究文档，未投稿、未实现、未验证。

@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基于几何约束的多视图二维设计向复杂三维模型表面的高保真纹理转译技术</title>
+<style>
+:root{
+  --page:#efeee9;
+  --paper:#ffffff;
+  --ink:#1b1b19;
+  --ink-2:#4a4a45;
+  --muted:#8b8b82;
+  --rule:#d9d7d0;
+  --rule-2:#b9b7ae;
+  --accent:#1a4b7c;
+  --accent-bg:#eef3f8;
+  --mark-bg:#fbf6ec;
+  --mark-line:#c8a35a;
+  --box-bg:#f8f7f4;
+
+  --font-cn:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC",sans-serif;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--page);
+  color:var(--ink);
+  font-family:var(--font-cn);
+  font-size:16px;
+  line-height:1.9;
+}
+
+/* 纸张 */
+.paper{
+  max-width:820px;
+  margin:40px auto;
+  background:var(--paper);
+  padding:72px 76px 88px;
+  box-shadow:0 1px 3px rgba(0,0,0,.09), 0 8px 32px rgba(0,0,0,.06);
+}
+
+/* 标题页 */
+.tp{text-align:center; margin-bottom:44px}
+.tp h1{
+  font-size:25px; line-height:1.55; font-weight:700;
+  margin:0 auto 14px; max-width:640px; letter-spacing:.01em;
+}
+.tp .sub{font-size:15px; color:var(--ink-2); margin:0 0 26px; font-weight:400}
+.tp .authors{font-size:15px; margin:0 0 4px; font-weight:600}
+.tp .affil{font-size:13.5px; color:var(--muted); margin:0}
+
+/* 摘要区块 */
+.abstract{
+  margin:36px 0 40px;
+  padding:26px 30px;
+  background:var(--box-bg);
+  border-top:2px solid var(--rule-2);
+  border-bottom:1px solid var(--rule);
+}
+.abstract .lbl{
+  font-size:15px; font-weight:700; text-align:center;
+  margin:0 0 14px; letter-spacing:.4em; text-indent:.4em;
+}
+.abstract p{
+  margin:0 0 12px; text-indent:2em; text-align:justify;
+  font-size:15.5px; line-height:1.88;
+}
+.abstract p:last-of-type{margin-bottom:16px}
+.abstract .kw{
+  font-size:14.5px; color:var(--ink-2); text-indent:0; margin:0;
+}
+.abstract .kw b{font-weight:600; color:var(--ink)}
+
+/* 章节 */
+section{margin-top:52px}
+h2{
+  font-size:19px; font-weight:700; line-height:1.5;
+  margin:0 0 20px; padding-bottom:9px;
+  border-bottom:1px solid var(--rule);
+  letter-spacing:.01em;
+}
+h3{
+  font-size:16px; font-weight:700; line-height:1.6;
+  margin:30px 0 12px;
+}
+h4{
+  font-size:15px; font-weight:700; margin:22px 0 8px; color:var(--ink);
+}
+p{margin:0 0 13px; text-indent:2em; text-align:justify}
+p.noindent{text-indent:0}
+ul,ol{margin:0 0 16px; padding-left:2.4em}
+li{margin-bottom:8px; text-align:justify}
+li>ul,li>ol{margin-top:6px; padding-left:1.6em}
+
+/* 图 */
+figure{margin:26px 0 28px; text-align:center}
+figure svg{max-width:100%; height:auto}
+figure svg text{font-family:var(--font-cn)}
+figcaption{
+  font-size:13.5px; color:var(--ink-2); line-height:1.65;
+  text-align:center; margin-top:10px; text-indent:0;
+}
+.tabcap{
+  font-size:13.5px; color:var(--ink-2); text-align:center;
+  margin:24px 0 8px; text-indent:0; font-weight:600;
+}
+
+/* 表格 */
+table{
+  border-collapse:collapse; width:100%;
+  margin:0 0 8px; font-size:14px; line-height:1.7;
+}
+caption{caption-side:top}
+th,td{
+  border:1px solid var(--rule); padding:10px 13px;
+  text-align:left; vertical-align:top; text-indent:0;
+}
+th{background:var(--box-bg); font-weight:600; color:var(--ink)}
+td p{margin:0; text-indent:0}
+
+/* 论断框 */
+.box{
+  background:var(--box-bg);
+  border-left:3px solid var(--accent);
+  padding:16px 22px 6px; margin:22px 0;
+}
+.box p{font-size:15px; margin-bottom:12px}
+.box .boxlbl{
+  font-size:13px; font-weight:700; color:var(--accent);
+  letter-spacing:.1em; margin:0 0 8px; text-indent:0;
+}
+
+/* 警示框 */
+.warn{
+  background:var(--mark-bg); border-left:3px solid var(--mark-line);
+  padding:16px 22px 6px; margin:22px 0;
+}
+.warn p{font-size:14.8px; margin-bottom:12px}
+.warn .boxlbl{
+  font-size:13px; font-weight:700; color:#8a6d2f;
+  letter-spacing:.1em; margin:0 0 8px; text-indent:0;
+}
+
+/* 状态标记：降低视觉重量，不打断阅读 */
+.b{
+  display:inline-block; font-size:11px; line-height:1.5;
+  padding:0 5px; margin:0 1px; border-radius:3px;
+  font-weight:500; white-space:nowrap; text-indent:0;
+  border:1px solid var(--rule-2); color:var(--muted);
+  vertical-align:1px;
+}
+.b-c{border-color:#9db8cf; color:var(--accent); background:var(--accent-bg)}
+.b-ok{border-color:#9bb28a; color:#3d6329; background:#f1f6ec}
+.b-u{border-color:var(--rule-2); color:var(--muted); background:var(--box-bg)}
+
+/* 参考文献 */
+ol.ref{list-style:none; padding-left:0; counter-reset:r}
+ol.ref li{
+  counter-increment:r; position:relative;
+  padding-left:2.6em; margin-bottom:9px;
+  font-size:14px; line-height:1.72; color:var(--ink-2);
+}
+ol.ref li::before{
+  content:"[" counter(r) "]";
+  position:absolute; left:0; color:var(--muted);
+}
+em{font-style:italic}
+
+/* 页脚 */
+.docfoot{
+  margin-top:60px; padding-top:18px;
+  border-top:1px solid var(--rule);
+  font-size:13px; color:var(--muted); text-align:center; text-indent:0;
+
+.docfoot a{color:var(--accent)}
+}
+
+/* 侧边目录：宽屏时浮动在纸张左侧之外 */
+nav.toc{
+  position:fixed; top:40px; left:calc(50% - 660px);
+  width:196px; font-size:13px; line-height:1.62;
+  max-height:88vh; overflow-y:auto;
+}
+nav.toc .t{font-weight:700; font-size:12px; color:var(--muted); letter-spacing:.15em; margin-bottom:10px}
+nav.toc a{display:block; color:var(--ink-2); text-decoration:none; padding:2px 0; text-indent:0}
+nav.toc a:hover{color:var(--accent)}
+nav.toc a.s{padding-left:13px; font-size:12.5px; color:var(--muted)}
+@media(max-width:1540px){ nav.toc{display:none} }
+
+@media(max-width:760px){
+  .paper{margin:0 auto; padding:36px 22px 56px; box-shadow:none}
+  .tp h1{font-size:21px}
+  body{font-size:15.5px}
+}
+
+/* 打印为 A4 论文 */
+@page{ size:A4; margin:22mm 20mm; }
+@media print{
+  body{background:#fff; font-size:10.5pt; line-height:1.75}
+  .paper{max-width:none; margin:0; padding:0; box-shadow:none}
+  nav.toc{display:none}
+  section{page-break-inside:auto}
+  h2,h3{page-break-after:avoid}
+  figure,table,.box,.warn{page-break-inside:avoid}
+  .abstract{border-top:1.5pt solid #999; border-bottom:.5pt solid #bbb}
+  a{color:inherit; text-decoration:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="toc">
+  <div class="t">目 录</div>
+  <a href="#s1">1 问题的提出</a>
+  <a href="#s11" class="s">1.1 实践背景</a>
+  <a href="#s12" class="s">1.2 断层在哪</a>
+  <a href="#s13" class="s">1.3 硬约束清单</a>
+  <a href="#s14" class="s">1.4 研究问题</a>
+  <a href="#s15" class="s">1.5 本文定位</a>
+  <a href="#s2">2 相关工作</a>
+  <a href="#s21" class="s">2.1 两个概念</a>
+  <a href="#s3">3 中间层设计</a>
+  <a href="#s31" class="s">3.1 输入输出契约</a>
+  <a href="#s32" class="s">3.2 三个子问题</a>
+  <a href="#s33" class="s">3.3 设计空间</a>
+  <a href="#s34" class="s">3.4 推荐路线</a>
+  <a href="#s35" class="s">3.5 接缝的表示</a>
+  <a href="#s36" class="s">3.6 执行步骤</a>
+  <a href="#s4">4 可行性分层与分工</a>
+  <a href="#s41" class="s">4.1 分配原则</a>
+  <a href="#s42" class="s">4.2 三层分工</a>
+  <a href="#s43" class="s">4.3 落地路径</a>
+  <a href="#s44" class="s">4.4 判断准则</a>
+  <a href="#s5">5 验证方案</a>
+  <a href="#s51" class="s">5.1 待验证假设</a>
+  <a href="#s52" class="s">5.2 数据</a>
+  <a href="#s53" class="s">5.3 评价指标</a>
+  <a href="#s54" class="s">5.4 对照与消融</a>
+  <a href="#s55" class="s">5.5 失败条件</a>
+  <a href="#s6">6 风险与局限</a>
+  <a href="#s7">7 下一步</a>
+  <a href="#app">附录 术语表</a>
+  <a href="#refs">参考文献</a>
+</nav>
+
+<article class="paper">
+
+<header class="tp">
+  <h1>基于几何约束的多视图二维设计向复杂三维模型表面的高保真纹理转译技术</h1>
+  <p class="sub">问题定义与方案设计</p>
+  <p class="authors">AvroraCL</p>
+  <p class="affil">独立研究 ｜ 2026 年 10 月 ｜ 草案 v0.5</p>
+</header>
+
+<div class="abstract">
+  <p class="lbl">摘 要</p>
+  <p>在游戏外观模改的实际生产中，多视图二维设计稿（正交视图）向三维模型表面贴图的转换，至今仍高度依赖人工。图像生成模型已能产出高质量的设计参考与素材，大语言模型已能将模糊的自然语言需求转译为结构化设计意图，但二者均无法完成从<strong>外观分布</strong>到<strong>UV 空间对应</strong>这一环节，即参考图上"长这样"的图案究竟对应模型表面哪一位置、跨过 UV 接缝后应如何接续。</p>
+  <p>本文提出，该环节构成一个独立且当前未被充分解决的<strong>中间层问题</strong>。其难点不在投影——投影已有成熟工具——而在<strong>延续</strong>：多视图天然存在信息缺口，背面、凹陷与自遮挡区域缺乏设计信息，图案必须被合理推演填充。本文结合游戏资产生产的六条硬约束，给出该中间层的输入输出契约、三个子问题的分解、三条候选技术路线及其取舍，并设计相应的验证方案。本文不提出新的生成模型，亦不声称已有实现。</p>
+  <p class="kw"><b>关键词：</b>纹理转译；UV 空间；接缝连续性；多视图设计稿；游戏资产生产；中间层</p>
+</div>
+
+<div class="box">
+  <p class="boxlbl">写给谁看</p>
+  <p>本文面向熟悉 PBR 流程、但不熟悉图形算法与人工智能的美术从业者。UV、接缝、通道这些你们比我熟，本文不解释；反过来，<strong>凡涉及算法与模型的部分，本文一律先给类比，再给术语，并尽量配图</strong>。</p>
+  <p>若只关心"哪些能做、哪些不能做、我该怎么安排手上的活"，可直接跳读第 4 章与第 7 章。</p>
+</div>
+
+<section id="s1">
+<h2>1 问题的提出</h2>
+
+<h3 id="s11">1.1 实践背景：一条已经半自动化的流水线</h3>
+<p>当前一套成熟的游戏外观模改流程大致如下 <span class="b b-c">已核对</span>（据作者自身实践）：</p>
+<ol>
+  <li>在 Blender 中整理与修复模型，并渲染若干<strong>正交视图</strong>作为绘制底稿；</li>
+  <li>在 Photoshop 等二维软件中依据正交视图绘制设计稿与素材；</li>
+  <li>在 Substance Painter 中于三维空间直接绘制，产出符合 PBR 规范的多通道贴图；</li>
+  <li>导出并导入游戏，验证效果后迭代修正。</li>
+</ol>
+<p>其中已引入人工智能的环节包括抠图、素材生成与参考图生成。图像生成模型配合有经验的设计师，已能产出可用的设计参考 <span class="b b-c">已核对</span>。</p>
+
+<figure>
+<svg viewBox="0 0 680 96" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>现有生产链条与缺失的中间层</title>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect x="4" y="24" width="116" height="44" rx="5" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<text x="62" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="#33332f">自然语言需求</text>
+<text x="62" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#8b8b82">模糊意图</text>
+<path d="M122 46 L140 46" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar)"/>
+<rect x="142" y="24" width="116" height="44" rx="5" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<text x="200" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="#33332f">大语言模型</text>
+<text x="200" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#8b8b82">结构化意图</text>
+<path d="M260 46 L278 46" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar)"/>
+<rect x="280" y="24" width="116" height="44" rx="5" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<text x="338" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="#33332f">图像生成模型</text>
+<text x="338" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#8b8b82">三视图与素材</text>
+<path d="M398 46 L416 46" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar)"/>
+<rect x="418" y="24" width="116" height="44" rx="5" fill="#fbf6ec" stroke="#c8a35a" stroke-width="1.1"/>
+<text x="476" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" font-weight="600" fill="#8a6d2f">中间层</text>
+<text x="476" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#8a6d2f">缺失</text>
+<path d="M536 46 L554 46" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar)"/>
+<rect x="556" y="24" width="118" height="44" rx="5" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<text x="615" y="40" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12.5" fill="#33332f">可用涂装</text>
+<text x="615" y="56" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#8b8b82">合规贴图</text>
+</svg>
+<figcaption>图 1　现有生产链条与缺失环节。首尾两端均有成熟方案，中间一环缺失。</figcaption>
+</figure>
+
+<h3 id="s12">1.2 断层所在：外观分布不等于空间对应</h3>
+<p>有一个容易混淆之处需要先行澄清。视觉模型对参考图所进行的处理，更准确的表述是<strong>条件注入</strong>，而非"理解三维结构"：结构控制、风格控制与参考图注入等机制所对齐的是<strong>外观分布</strong>，即"这张图应当长成什么样"；它们并不建立<strong>空间对应</strong>，即"这一纹样对应模型表面哪一具体位置、跨过接缝后接到何处"。</p>
+<p>而中间层所需要的恰恰是后者。这解释了为何单纯提升生成模型的能力无法自动补齐该环节：它不是分辨率问题，也不是语义理解问题，而是<strong>空间结构的错配</strong>。</p>
+
+<div class="box">
+  <p class="boxlbl">核心论断</p>
+  <p>UV 空间与图像空间的拓扑结构并不一致：UV 图上紧邻的两块，在三维模型上可能相隔很远；三维模型上连续的一片，在 UV 图上可能分属互不相连的岛屿。因此，视觉信息必须被<strong>在两个拓扑结构不同的空间之间搬运</strong>，而不能简单地投影或复制。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 680 238" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>三维表面与 UV 空间的拓扑错配</title>
+<desc>左侧三维表面上 A、B、C 三点彼此相邻；展开为右侧 UV 空间后，三点分属三个互不相连的岛屿，相距很远。</desc>
+<defs>
+<marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<text x="50" y="26" font-size="13.5" font-weight="600" fill="#33332f">三维表面</text>
+<rect x="50" y="40" width="210" height="118" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<path d="M50 70 H260 M50 100 H260 M50 130 H260 M120 40 V158 M190 40 V158" fill="none" stroke="#ddd9d0" stroke-width="0.6" stroke-dasharray="3 3"/>
+<path d="M110 80 L150 105 L125 135 Z" fill="none" stroke="#1a4b7c" stroke-width="1.2"/>
+<circle cx="110" cy="80" r="5.5" fill="#1a4b7c"/>
+<circle cx="150" cy="105" r="5.5" fill="#1a4b7c"/>
+<circle cx="125" cy="135" r="5.5" fill="#1a4b7c"/>
+<text x="99" y="72" font-size="12" font-weight="600" fill="#1a4b7c" text-anchor="end">A</text>
+<text x="161" y="103" font-size="12" font-weight="600" fill="#1a4b7c">B</text>
+<text x="116" y="150" font-size="12" font-weight="600" fill="#1a4b7c" text-anchor="end">C</text>
+
+<path d="M272 100 L358 100" fill="none" stroke="#8b8b82" stroke-width="1.4" marker-end="url(#ar2)"/>
+<text x="315" y="88" font-size="12" fill="#8b8b82" text-anchor="middle">展开</text>
+
+<text x="390" y="26" font-size="13.5" font-weight="600" fill="#33332f">UV 空间</text>
+<rect x="390" y="40" width="240" height="118" rx="3" fill="#ffffff" stroke="#c9c7be" stroke-width="0.7"/>
+<rect x="402" y="52" width="72" height="38" rx="2" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<rect x="488" y="52" width="58" height="32" rx="2" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<rect x="402" y="100" width="52" height="48" rx="2" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<rect x="496" y="98" width="76" height="50" rx="2" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<rect x="586" y="52" width="36" height="30" rx="2" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.6"/>
+<path d="M430 71 L424 124 L534 124" fill="none" stroke="#a32d2d" stroke-width="1.2" stroke-dasharray="4 3"/>
+<circle cx="430" cy="71" r="5" fill="#1a4b7c"/>
+<circle cx="424" cy="124" r="5" fill="#1a4b7c"/>
+<circle cx="534" cy="124" r="5" fill="#1a4b7c"/>
+<text x="438" y="68" font-size="12" font-weight="600" fill="#1a4b7c">A</text>
+<text x="416" y="134" font-size="12" font-weight="600" fill="#1a4b7c" text-anchor="end">B</text>
+<text x="542" y="134" font-size="12" font-weight="600" fill="#1a4b7c">C</text>
+
+<text x="50" y="178" font-size="12" fill="#5f5e5a">三点在表面上彼此相邻，沿表面走几步就到</text>
+<text x="390" y="178" font-size="12" fill="#5f5e5a">展开后分属不同岛屿，直线距离很远</text>
+<rect x="50" y="190" width="580" height="32" rx="4" fill="#f8f7f4" stroke="#e3e1dc" stroke-width="0.6"/>
+<text x="66" y="206" font-size="12.5" fill="#4a4a45">沿表面度量的距离，与 UV 图上的直线距离，不是同一回事</text>
+</svg>
+<figcaption>图 2　三维表面与 UV 空间的拓扑错配。实线为表面上的邻接，虚线为 UV 上的距离。</figcaption>
+</figure>
+
+<p>理解上述论断，还有一个前置问题需要先讲清楚：<strong>计算机里有两种完全不同的活，一种叫"算"，一种叫"猜"</strong>。这是全文最需要区分的一件事，后面所有的分工判断都由它决定。</p>
+
+<figure>
+<svg viewBox="0 0 680 208" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>算与猜的区别</title>
+<desc>左侧为确定性算法，同样的输入永远得到同样的输出；右侧为生成模型，同样的输入每次可能产生不同的输出，存在多种可能。</desc>
+<defs>
+<marker id="arA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<text x="60" y="26" font-size="13.5" font-weight="600" fill="#33332f">算：有唯一答案</text>
+<rect x="60" y="50" width="88" height="44" rx="4" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="104" y="72" font-size="13" font-weight="600" fill="#33332f" text-anchor="middle">输入</text>
+<path d="M150 72 L184 72" fill="none" stroke="#5f5e5a" stroke-width="1.3" marker-end="url(#arA)"/>
+<rect x="186" y="50" width="104" height="44" rx="4" fill="#eef3f8" stroke="#9db8cf" stroke-width="0.9"/>
+<text x="238" y="72" font-size="13" font-weight="600" fill="#1a4b7c" text-anchor="middle">唯一结果</text>
+<text x="60" y="118" font-size="12" fill="#5f5e5a">同样的输入，永远得到同样的输出</text>
+
+<text x="370" y="26" font-size="13.5" font-weight="600" fill="#33332f">猜：有多种可能</text>
+<rect x="370" y="60" width="76" height="48" rx="4" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="408" y="84" font-size="13" font-weight="600" fill="#33332f" text-anchor="middle">输入</text>
+<path d="M448 84 L488 51" fill="none" stroke="#8b8b82" stroke-width="1.2" marker-end="url(#arA)"/>
+<path d="M448 84 L488 84" fill="none" stroke="#8b8b82" stroke-width="1.2" marker-end="url(#arA)"/>
+<path d="M448 84 L488 117" fill="none" stroke="#8b8b82" stroke-width="1.2" marker-end="url(#arA)"/>
+<rect x="490" y="36" width="106" height="30" rx="4" fill="#fbf6ec" stroke="#c8a35a" stroke-width="0.9"/>
+<text x="543" y="51" font-size="12.5" fill="#8a6d2f" text-anchor="middle">可能的结果一</text>
+<rect x="490" y="69" width="106" height="30" rx="4" fill="#fbf6ec" stroke="#c8a35a" stroke-width="0.9"/>
+<text x="543" y="84" font-size="12.5" fill="#8a6d2f" text-anchor="middle">可能的结果二</text>
+<rect x="490" y="102" width="106" height="30" rx="4" fill="#fbf6ec" stroke="#c8a35a" stroke-width="0.9"/>
+<text x="543" y="117" font-size="12.5" fill="#8a6d2f" text-anchor="middle">可能的结果三</text>
+<text x="370" y="148" font-size="12" fill="#5f5e5a">同样的输入，每次跑出来都可能不一样</text>
+
+<rect x="60" y="162" width="560" height="32" rx="4" fill="#f8f7f4" stroke="#e3e1dc" stroke-width="0.6"/>
+<text x="76" y="178" font-size="12.5" fill="#4a4a45">几何量必须"算"；只有不存在唯一答案的地方，才该交给"猜"</text>
+</svg>
+<figcaption>图 3　"算"与"猜"的区别。前者输出唯一且可校验，后者输出多样且难以验证。</figcaption>
+</figure>
+
+<h3 id="s13">1.3 硬约束清单</h3>
+<p>以下约束来自游戏资产生产的实际需求，而非算法偏好。<span class="b">假设</span>　它们构成本问题区别于一般纹理生成研究的根本原因，但此判断系由单一从业者的实践归纳，尚待交叉验证。</p>
+
+<p class="tabcap">表 1　游戏资产生产对纹理转译的硬约束</p>
+<table>
+  <tr><th style="width:16%">编号</th><th style="width:26%">约束</th><th style="width:30%">含义</th><th>对方案的排除效果</th></tr>
+  <tr><td>C1</td><td>UV 不可重排</td><td>数十万面量级的 UV 一旦重排，将牵连法线烘焙、LOD 与平台规范，代价不可接受</td><td>排除"重新参数化为整块"的路线</td></tr>
+  <tr><td>C2</td><td>规模</td><td>面数达数十万，任何需要逐面人工介入的方案都不可行</td><td>要求全流程自动</td></tr>
+  <tr><td>C3</td><td>规范</td><td>贴图尺寸、通道构成、命名与格式由平台规定</td><td>输出必须可被规范校验</td></tr>
+  <tr><td>C4</td><td>可编辑</td><td>结果须交回美术继续修改，不能是不可拆解的黑箱产物</td><td>排除纯端到端且不可回改的方案</td></tr>
+  <tr><td>C5</td><td>接缝不可见</td><td>跨接缝处不得出现可见断裂、错位或拉伸突变</td><td>接缝处理是一等公民，而非后处理</td></tr>
+  <tr><td>C6</td><td>无空洞</td><td>未被视图覆盖的表面必须有合理延续，不得留空或留噪点</td><td>必须具备推演与补全机制</td></tr>
+</table>
+
+<h3 id="s14">1.4 研究问题</h3>
+<ul>
+  <li><strong>RQ1（对应）</strong>：能否在既定 UV 拓扑下，建立设计稿像素与 UV 位置之间稳定、可计算的对应关系？</li>
+  <li><strong>RQ2（延续）</strong>：对多视图未覆盖的表面，能否生成在视觉与语义上均可接受的图案延续，且其质量可被度量？</li>
+  <li><strong>RQ3（合规）</strong>：上述过程能否在 C1 至 C6 全部约束下完成，且结果保持可编辑？</li>
+</ul>
+
+<h3 id="s15">1.5 本文定位与贡献声明</h3>
+<p>本文<strong>不提出新的生成模型</strong>，亦不声称改进了任何现有算法。所调用的视觉生成模型、几何处理与渲染工具均为外部既有组件。本文的工作限于以下四项：</p>
+<ol>
+  <li>将该工程断层<strong>界定</strong>为一个可研究的问题，并给出其形式化描述；</li>
+  <li>给出该问题的<strong>硬约束清单</strong>与输入输出契约；</li>
+  <li>梳理<strong>设计空间</strong>，列出候选路线并分析其取舍；</li>
+  <li>设计<strong>尚未执行</strong>的验证方案。</li>
+</ol>
+</section>
+
+<section id="s2">
+<h2>2 相关工作</h2>
+<p>本节不综述扩散模型原理，只讨论既有工作各自解决了中间层的哪一部分。在此之前，先解释两个会反复出现的概念。</p>
+
+<h3 id="s21">2.1 两个需要先讲清的概念</h3>
+
+<h4>沿表面走的距离</h4>
+<p>两点之间怎么算远近？平时量的是直线——拿尺子一拉，穿过空气。但在物体表面上，"近不近"要看<strong>沿着表面走多久</strong>。拿一只碗来说，碗口对边的两点，直线一跨就到；可要是只允许贴着碗面走，就得绕下碗底再爬上来，远出好几倍。</p>
+<p>后文统一称它为<strong>测地距离</strong>。为什么非要在意它？因为判断"谁跟谁真的挨着"只能靠它——直线距离会骗人，穿过空气的那种近不算近。</p>
+
+<figure>
+<svg viewBox="0 0 680 196" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>直线距离与沿表面距离的区别</title>
+<desc>碗口对边的两点，直线一跨即到，但沿碗面走需绕下碗底再爬上来，远得多。</desc>
+<path d="M120 60 L560 60" fill="none" stroke="#a32d2d" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="340" y="46" font-size="12.5" fill="#a32d2d" text-anchor="middle">直线距离，穿过空气</text>
+<path d="M120 60 Q 340 180 560 60" fill="none" stroke="#1a4b7c" stroke-width="2.6"/>
+<text x="340" y="150" font-size="12.5" fill="#1a4b7c" text-anchor="middle">沿表面走的距离，需绕下碗底</text>
+<circle cx="120" cy="60" r="6" fill="#1a4b7c"/>
+<circle cx="560" cy="60" r="6" fill="#1a4b7c"/>
+<text x="108" y="50" font-size="12.5" font-weight="600" fill="#1a4b7c" text-anchor="end">A</text>
+<text x="572" y="50" font-size="12.5" font-weight="600" fill="#1a4b7c">B</text>
+<rect x="60" y="164" width="560" height="28" rx="4" fill="#f8f7f4" stroke="#e3e1dc" stroke-width="0.6"/>
+<text x="76" y="178" font-size="12.5" fill="#4a4a45">判断谁跟谁挨着，只能看下面那条路，不能看上面那条</text>
+</svg>
+<figcaption>图 4　直线距离与沿表面距离的差异。前者穿过空气，后者贴合表面。</figcaption>
+</figure>
+
+<h4>模型拿到的，和它不知道的</h4>
+<p>第二个概念解释生成模型为什么需要额外帮助。模型拿到的是一张平面图，对它而言只是一堆格子上的数值；它并不知道这些格子对应模型表面的哪一块、朝向哪边。好比有人递给你一张印好的贴纸，却没告诉你该往哪个面贴。</p>
+<p>近年的方法（[4]）做的正是补上这段缺失的对应关系：一边生成贴图，一边告知模型"你正在画的这一块，是模型的哪个位置、朝哪个方向"。后文称之为<strong>表面感知的位置信息</strong>。第 3.5 节讨论的接缝权重，本质上也属于这一类信息。</p>
+
+<figure>
+<svg viewBox="0 0 680 196" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>模型拿到的信息与其缺失的对应关系</title>
+<desc>左侧为模型实际拿到的平面像素；右侧为三维表面；两者之间的对应关系缺失，需要额外补充。</desc>
+<defs>
+<marker id="arN" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<text x="60" y="38" font-size="13" font-weight="600" fill="#33332f">模型拿到的</text>
+<rect x="60" y="50" width="170" height="90" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<path d="M117 50 V140 M174 50 V140 M60 80 H230 M60 110 H230" fill="none" stroke="#ddd9d0" stroke-width="0.8"/>
+<text x="145" y="152" font-size="12" fill="#5f5e5a" text-anchor="middle">一堆格子上的颜色值</text>
+
+<path d="M232 95 L286 95" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#arN)"/>
+<text x="310" y="96" font-size="26" font-weight="600" fill="#a32d2d" text-anchor="middle">?</text>
+<path d="M334 95 L376 95" fill="none" stroke="#8b8b82" stroke-width="1.3"/>
+<text x="305" y="130" font-size="12" fill="#a32d2d" text-anchor="middle">对应关系缺失</text>
+
+<text x="380" y="38" font-size="13" font-weight="600" fill="#33332f">它不知道的</text>
+<rect x="380" y="50" width="170" height="90" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<path d="M400 120 Q 465 68 530 120" fill="none" stroke="#1a4b7c" stroke-width="1.8"/>
+<path d="M432 106 L432 84" fill="none" stroke="#1a4b7c" stroke-width="1.2" marker-end="url(#arN)"/>
+<path d="M465 94 L465 72" fill="none" stroke="#1a4b7c" stroke-width="1.2" marker-end="url(#arN)"/>
+<path d="M498 106 L498 84" fill="none" stroke="#1a4b7c" stroke-width="1.2" marker-end="url(#arN)"/>
+<text x="465" y="152" font-size="12" fill="#5f5e5a" text-anchor="middle">这些格子在空间里的位置与朝向</text>
+
+<rect x="60" y="164" width="560" height="28" rx="4" fill="#f8f7f4" stroke="#e3e1dc" stroke-width="0.6"/>
+<text x="76" y="178" font-size="12.5" fill="#4a4a45">表面感知的位置信息，补的就是中间那个问号</text>
+</svg>
+<figcaption>图 5　模型实际掌握的信息与其缺失的对应关系。后者须由外部补充，无法由模型自行推断。</figcaption>
+</figure>
+
+<p class="tabcap">表 2　四组相关工作与本文的关系</p>
+<table>
+  <tr><th style="width:19%">工作</th><th style="width:32%">主要做法</th><th>与本文的关系</th></tr>
+  <tr>
+    <td>Im2SurfTex<br><span style="font-size:12.5px;color:#8b8b82">CGF 2025 [2]</span></td>
+    <td>将二维扩散模型生成的多视角图像，由训练所得的神经模块聚合至纹理空间，取代"反投影加平均"的传统做法；像素位置以三维坐标、法向及面片内<strong>测地距离</strong>编码</td>
+    <td>解决多视图融合的接缝瑕疵。但仍走投影路线，因而受限于遮挡与视角不一致，此点已被 DirectUV 明确批评 [4]</td>
+  </tr>
+  <tr>
+    <td>DirectUV<br><span style="font-size:12.5px;color:#8b8b82">2026 [4]</span></td>
+    <td>直接在 UV 空间生成纹理，以<strong>表面感知位置编码</strong>使注意力绑定于表面几何而非 UV 网格坐标</td>
+    <td>其摘要明确指出该错配"限制了跨接缝与不连通 UV 岛之间的一致性"，即本文的核心问题已被正式命名</td>
+  </tr>
+  <tr>
+    <td>Robust Curve Embedding<br><span style="font-size:12.5px;color:#8b8b82">CAGD 2026 [3]</span></td>
+    <td>将曲线表示为代理网格上的<strong>测地路径</strong>，并在 UV 接缝处精确切分，以精确复现图块边界，消除以往仅能靠启发式缓解的畸变；可处理不一致网格与多边形汤</td>
+    <td>与本文所选"UV 边界对齐"路线最为接近，且专治"脏网格"。但仅处理曲线，不涉及整张贴图</td>
+  </tr>
+  <tr>
+    <td>UniTex<br><span style="font-size:12.5px;color:#8b8b82">CGF 2026 [1]</span></td>
+    <td>自多视角照片重建整块（single-chart）贴图，含颜色感知网格切割与光照材质解耦</td>
+    <td><strong>方向相反</strong>：它通过重新参数化消灭接缝，本文则因 C1 而必须适应既有接缝。该对比构成本文的定位锚点</td>
+  </tr>
+</table>
+
+<div class="box">
+  <p class="boxlbl">共同点与空位</p>
+  <p>上述三项工作 [2][3][4] 不约而同地采用同一类手段：<strong>沿表面度量的距离</strong>（测地距离）或<strong>表面感知的位置编码</strong>，用以重建跨 UV 的真实邻接关系。这印证了 1.2 节的论断，也表明该方向已有可借鉴的基础，无需从零发明。</p>
+  <p>然而三者均以<strong>生成视觉上美观的纹理</strong>为目标，无人以<strong>把既有设计稿精确转译为符合生产规范的资产</strong>为目标。目标差异所导致的方案差异，正是本文的位置所在。</p>
+</div>
+</section>
+
+<section id="s3">
+<h2>3 中间层设计</h2>
+
+<h3 id="s31">3.1 输入输出契约</h3>
+<p><strong>输入</strong>包括：一组多视图二维设计稿（以正交视图为主）<span class="b">待补</span>　视图数量与具体视角尚待明确，是否附带相机参数亦待明确；目标三维网格及其既定 UV 布局；可选的结构化设计意图描述，由大语言模型自自然语言需求产出。</p>
+<p><strong>输出</strong>为满足 C1 至 C6 的贴图集合，并保留可编辑的中间产物。</p>
+
+<h3 id="s32">3.2 三个子问题</h3>
+<ol>
+  <li><strong>对应</strong>：设计稿上的图案元素落在 UV 的哪一位置。属几何问题，工具相对成熟。</li>
+  <li><strong>延续</strong>：多视图未覆盖的表面，图案应如何延伸。属<strong>推演</strong>问题，尚无成熟解，是本文认定的真正难点。</li>
+  <li><strong>合规</strong>：结果是否满足尺寸、通道、接缝与可编辑性要求。</li>
+</ol>
+<p>三者之中，延续决定成败，对应决定精度，合规决定能否交付。</p>
+
+<figure>
+<svg viewBox="0 0 680 132" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>中间层的三个子问题</title>
+<desc>设计稿依次经过对应、延续、合规三个环节转为可用贴图，其中延续环节为难点。</desc>
+<defs>
+<marker id="ar3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect x="14" y="36" width="98" height="52" rx="4" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="63" y="55" font-size="13" font-weight="600" fill="#33332f" text-anchor="middle">设计稿</text>
+<text x="63" y="73" font-size="11.5" fill="#8b8b82" text-anchor="middle">输入</text>
+<path d="M114 62 L146 62" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar3)"/>
+
+<rect x="148" y="36" width="98" height="52" rx="4" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="197" y="55" font-size="13" font-weight="600" fill="#33332f" text-anchor="middle">对应</text>
+<text x="197" y="73" font-size="11.5" fill="#8b8b82" text-anchor="middle">几何问题，有工具</text>
+<path d="M248 62 L280 62" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar3)"/>
+
+<rect x="282" y="36" width="98" height="52" rx="4" fill="#fbf6ec" stroke="#c8a35a" stroke-width="1.2"/>
+<text x="331" y="55" font-size="13" font-weight="600" fill="#8a6d2f" text-anchor="middle">延续</text>
+<text x="331" y="73" font-size="11.5" fill="#8a6d2f" text-anchor="middle">推演问题，无成熟解</text>
+<path d="M382 62 L414 62" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar3)"/>
+
+<rect x="416" y="36" width="98" height="52" rx="4" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="465" y="55" font-size="13" font-weight="600" fill="#33332f" text-anchor="middle">合规</text>
+<text x="465" y="73" font-size="11.5" fill="#8b8b82" text-anchor="middle">尺寸、通道、可编辑</text>
+<path d="M516 62 L548 62" fill="none" stroke="#8b8b82" stroke-width="1.3" marker-end="url(#ar3)"/>
+
+<rect x="550" y="36" width="116" height="52" rx="4" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<text x="608" y="55" font-size="13" font-weight="600" fill="#33332f" text-anchor="middle">可用贴图</text>
+<text x="608" y="73" font-size="11.5" fill="#8b8b82" text-anchor="middle">输出</text>
+
+<text x="331" y="108" font-size="12" fill="#8a6d2f" text-anchor="middle">延续是本文认定的难点：它没有可供计算的输入，只能推演</text>
+</svg>
+<figcaption>图 6　中间层的三个子问题及其性质。延续环节不具有唯一正确解，因而无法由确定性算法给出。</figcaption>
+</figure>
+
+<h3 id="s33">3.3 设计空间</h3>
+<p>以下三条路线按是否绕经三维空间区分。<span class="b">假设</span>　路线 A 精度高而覆盖率低，路线 B 覆盖率高而可控性弱。</p>
+
+<h4>路线 A：投影锚定加测地补全</h4>
+<p>先以投影确定设计稿与表面的对应，再利用沿表面度量的距离，把图案自已覆盖区域向未覆盖区域推演，接缝处按图块边界精确切分（参考 [3]）。</p>
+<ul>
+  <li><strong>优势</strong>：可解释、可回改、接缝处理精确；</li>
+  <li><strong>劣势</strong>：严重依赖视图覆盖，大面积未覆盖区域的推演质量存疑。</li>
+</ul>
+
+<h4>路线 B：UV 空间直接生成</h4>
+<p>以设计稿为条件，直接在 UV 空间生成贴图，并以表面感知编码告知模型每一 UV 位置背后的表面信息（参考 [4]）。</p>
+<ul>
+  <li><strong>优势</strong>：天然覆盖全部表面，不存在未覆盖问题；</li>
+  <li><strong>劣势</strong>：可控性弱，生成结果难以逐个元素回改，与 C4 冲突的风险高。</li>
+</ul>
+
+<h4>路线 C：混合，即投影锚定加 UV 空间补全</h4>
+<p>以投影结果作为<strong>硬锚点</strong>约束 UV 空间的生成过程，使已覆盖区域忠于设计稿、未覆盖区域由模型推演，且推演结果受表面邻接关系约束。</p>
+<ul>
+  <li><strong>优势</strong>：兼顾精度与覆盖率，锚点保证了可回改性；</li>
+  <li><strong>劣势</strong>：两套机制的接口与权重分配，是本路线实际上的难点。</li>
+</ul>
+
+<h3 id="s34">3.4 推荐路线</h3>
+<p><span class="b">假设</span>　路线 C 最契合 C1 至 C6。理由在于可编辑性（C4）在 A 与 B 之间存在直接冲突：A 可改但覆盖不全，B 全覆盖但难改，C 是唯一有可能同时满足两者的结构。</p>
+<p>该假设尚未验证。若验证失败，预期退化路径为：优先保住可编辑性，退回路线 A，并将未覆盖区域的处理降格为半自动，即引入人工介入。</p>
+
+<h3 id="s35">3.5 接缝的表示：从硬切分到权重场</h3>
+<p>路线 C 中尚有一个必须单独决定的问题：接缝应当如何表示。</p>
+<p>现有做法以<strong>硬切分</strong>为主 [3]，即把接缝视为硬边界，在图块边界处精确切开。其优点是边界精确，缺点则是非此即彼：要么对齐，要么切断，不存在中间态。</p>
+<p>另一种表示是<strong>权重场</strong>，即为每一 UV 位置赋予一个连续值，用以表示其靠近接缝的程度，或跨接缝的连接应当有多强。连续量有两点直接优势。其一，它可进入损失函数，亦可作为条件注入生成模型，而硬约束难以优化。其二，它允许对不同接缝区别对待，而非一视同仁。</p>
+<p><span class="b">假设</span>　权重场的取值除几何距离之外，还应纳入<strong>视觉显著性</strong>，即该处在游戏中的可见程度。理由在于，游戏资产的质量要求是"玩家看得到的地方不出错"，而非整张贴图平均美观；这一要求与既有研究的目标并不相同，因而在既有文献中未见处理。</p>
+
+<figure>
+<svg viewBox="0 0 680 210" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>接缝的两种表示方式</title>
+<desc>左侧为硬切分，接缝是一条实线，图案在两侧断开且不对齐；右侧为权重场，靠近接缝处权重高、远离处权重低，图案可跨越接缝连续过渡。</desc>
+<text x="60" y="26" font-size="13.5" font-weight="600" fill="#33332f">硬切分：非此即彼</text>
+<rect x="60" y="42" width="115" height="90" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<rect x="185" y="42" width="125" height="90" rx="3" fill="#f4f3ef" stroke="#c9c7be" stroke-width="0.7"/>
+<rect x="72" y="66" width="58" height="28" rx="3" fill="#7F77DD"/>
+<rect x="207" y="88" width="58" height="28" rx="3" fill="#7F77DD"/>
+<line x1="178" y1="42" x2="178" y2="132" stroke="#a32d2d" stroke-width="2.5"/>
+<text x="60" y="152" font-size="12" fill="#5f5e5a">图案在两侧断开，且不对齐</text>
+
+<text x="370" y="26" font-size="13.5" font-weight="600" fill="#33332f">权重场：连续过渡</text>
+<rect x="370" y="42" width="59" height="90" fill="#dbe9f7"/>
+<rect x="429" y="42" width="28" height="90" fill="#85B7EB"/>
+<rect x="457" y="42" width="28" height="90" fill="#378ADD"/>
+<rect x="495" y="42" width="28" height="90" fill="#378ADD"/>
+<rect x="523" y="42" width="28" height="90" fill="#85B7EB"/>
+<rect x="551" y="42" width="69" height="90" fill="#dbe9f7"/>
+<rect x="370" y="42" width="115" height="90" rx="3" fill="none" stroke="#9db8cf" stroke-width="0.7"/>
+<rect x="495" y="42" width="125" height="90" rx="3" fill="none" stroke="#9db8cf" stroke-width="0.7"/>
+<rect x="440" y="68" width="100" height="38" rx="3" fill="#7F77DD"/>
+<line x1="488" y1="42" x2="488" y2="132" stroke="#c8a35a" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="370" y="152" font-size="12" fill="#5f5e5a">越靠近接缝权重越高，可连续衰减</text>
+
+<rect x="60" y="166" width="560" height="32" rx="4" fill="#f8f7f4" stroke="#e3e1dc" stroke-width="0.6"/>
+<text x="76" y="182" font-size="12.5" fill="#4a4a45">权重的两个来源：到接缝的距离　｜　该处在游戏中的视觉显著性</text>
+</svg>
+<figcaption>图 7　接缝的两种表示方式。左为硬切分，右为权重场；后者可进入损失函数，亦可用作生成模型的条件。</figcaption>
+</figure>
+
+<div class="warn">
+  <p class="boxlbl">两处待决</p>
+  <p>其一，权重化会削弱硬切分所保证的边界精确性，结果究竟是更不易察觉还是变得更糊，须实测方能判断，不得想当然。其二，视觉显著性如何量化目前尚无定论：是屏幕空间占比、法向朝向，抑或由美术手工标定，须先行确定，否则本小节思路无法落地。</p>
+  <p>另需警惕一种退化：若权重最终只被用于令贴图更平滑，则重蹈 [1] 中以全变分损失冒充质量指标的覆辙。</p>
+</div>
+
+<h3 id="s36">3.6 路线 C 的执行步骤</h3>
+<p>以下按实际执行顺序列出路线 C 的各个环节，每一步标注其性质（算或猜）、产出与验证状态。此节即为后续软件实现的功能清单。</p>
+
+<p class="tabcap">表 3　路线 C 的执行步骤</p>
+<table>
+  <tr><th style="width:6%">步</th><th style="width:20%">环节</th><th style="width:8%">性质</th><th style="width:34%">产出</th><th>验证状态</th></tr>
+  <tr><td>1</td><td>渲染正交视图并记录相机参数；提取 UV 岛边界与邻接关系</td><td>算</td><td>视图组、相机参数表、UV 岛与接缝的图结构</td><td><span class="b b-ok">已验证</span></td></tr>
+  <tr><td>2</td><td>按相机参数把设计稿投影到表面</td><td>算</td><td>每一 UV 位置的设计稿颜色，以及未覆盖掩码</td><td><span class="b b-ok">已验证</span></td></tr>
+  <tr><td>3</td><td>构建接缝权重场</td><td>算</td><td>与贴图同分辨率的权重图，取值含沿表面距离与视觉显著性两部分</td><td><span class="b">假设</span></td></tr>
+  <tr><td>4</td><td>标注未覆盖区域</td><td>算</td><td>一张掩码图，标明哪些表面完全没有设计信息</td><td><span class="b b-ok">已验证</span></td></tr>
+  <tr><td>5</td><td>以已覆盖区域为硬锚点，补全未覆盖区域</td><td><strong>猜</strong></td><td>完整贴图</td><td><span class="b b-u">未验证</span></td></tr>
+  <tr><td>6</td><td>校验接缝连续性、覆盖率与规范符合度，不达标处交回人工</td><td>算</td><td>校验报告与待修区域标记</td><td><span class="b b-ok">已验证</span></td></tr>
+</table>
+
+<p>表中第 1、2、4、6 步均属确定性计算，可以先行工具化，此即 4.3 节阶段零的全部内容。第 3 步依赖一个尚未敲定的显著性定义。第 5 步是唯一需要"猜"的环节，<strong>全部研究风险集中于此处</strong>。</p>
+<p>这一拆分有一层实际意义：即便第 5 步始终做不好，前四步加第六步也已经构成一套可用的辅助工具——它能自动完成投影、自动标出哪些地方没设计信息、自动检查接缝与规范，剩下的由人补。这比现在的纯手流程已经前进一大截。</p>
+</section>
+
+<section id="s4">
+<h2>4 可行性分层与实现分工</h2>
+<p>第 3 章给出了中间层的设计空间，但并未回答一个更现实的问题：这些环节中，哪些现在就能做成工具，哪些应当交给生成模型，哪些目前还没有把握。本章处理该问题。区分的依据不是技术难度，而是<strong>该环节是否存在唯一正确的答案</strong>。</p>
+
+<h3 id="s41">4.1 分配原则</h3>
+<div class="box">
+  <p class="boxlbl">原则</p>
+  <p><strong>能算的不要猜，猜的部分才算不出来。</strong>凡存在唯一正确解的几何量，必须由确定性算法给出，不得交由生成模型近似；生成模型只在信息确实缺失、必须推演的环节介入。</p>
+</div>
+<p>理由有二。其一，几何量的误差会累积且难以察觉：贴图偏移若干像素、接缝错开一小段，在成品上往往要到特定视角才暴露，届时返工成本已高。其二，生成模型的输出缺乏可验证性，一旦用于几何计算，错误无法被自动检出。反之，在未覆盖区域根本<strong>不存在可供计算的输入</strong>，此时推演是唯一出路，也正是生成模型应当介入的地方。</p>
+
+<h3 id="s42">4.2 三层分工</h3>
+<p class="tabcap">表 4　各环节的归属与验证状态</p>
+<table>
+  <tr><th style="width:28%">环节</th><th style="width:14%">归属</th><th style="width:16%">验证状态</th><th>依据</th></tr>
+  <tr><td>正交视图渲染与相机参数管理</td><td>工具</td><td><span class="b b-ok">已验证</span></td><td>Blender 正交相机，为作者日常流程的一部分</td></tr>
+  <tr><td>投影与烘焙</td><td>工具</td><td><span class="b b-ok">已验证</span></td><td>Substance Painter 投影笔刷与 Blender 烘焙均为行业标准功能</td></tr>
+  <tr><td>UV 岛边界与邻接关系提取</td><td>工具</td><td><span class="b b-ok">已验证</span></td><td>图遍历问题，属确定性算法</td></tr>
+  <tr><td>输出规范校验</td><td>工具</td><td><span class="b b-ok">已验证</span></td><td>尺寸、通道与格式的检查属确定性比对</td></tr>
+  <tr><td>测地距离场计算</td><td>工具</td><td><span class="b b-c">有研究</span></td><td>算法成熟（快速行进法、热方法等），但数十万面量级下的开销本文未估算 <span class="b">待补</span></td></tr>
+  <tr><td>接缝切分与图块对齐</td><td>工具</td><td><span class="b b-c">有研究</span></td><td>方法见 [3]，其实验显示可消除接缝瑕疵并降低高畸变离群值</td></tr>
+  <tr><td>自然语言需求至结构化意图</td><td>人工智能</td><td><span class="b b-ok">已验证</span></td><td>作者实践；大语言模型在此充当需求转译器</td></tr>
+  <tr><td>设计参考图与素材生成</td><td>人工智能</td><td><span class="b b-ok">已验证</span></td><td>作者实践；配合有经验的设计师已可产出可用参考</td></tr>
+  <tr><td>抠图与素材分离</td><td>人工智能</td><td><span class="b b-ok">已验证</span></td><td>作者实践及既有 SaaS 流程</td></tr>
+  <tr><td><strong>未覆盖区域的图案推演</strong></td><td>人工智能</td><td><span class="b b-u">未验证</span></td><td>本文认定的生成模型主战场，对应 3.2 节子问题二</td></tr>
+  <tr><td>跨接缝一致性</td><td><span class="b b-u">未决</span></td><td><span class="b b-u">未验证</span></td><td>[3][4] 已提出机制，但未见在真实游戏资产与数十万面规模上的验证</td></tr>
+  <tr><td>设计稿至 UV 的精确对应</td><td><span class="b b-u">未决</span></td><td><span class="b b-u">未验证</span></td><td>小尺度可行，大规模下的稳定性未知</td></tr>
+  <tr><td>推演结果的可编辑性保持</td><td><span class="b b-u">未决</span></td><td><span class="b b-u">未验证</span></td><td>与约束 C4 直接相关，是路线 C 成立与否的关键</td></tr>
+</table>
+
+<div class="box">
+  <p class="boxlbl">观察</p>
+  <p>表中六项已验证环节里，<strong>四项属工具、三项属人工智能</strong>，且均已在日常生产中实际使用。真正构成研究风险的，集中在最后三行：跨接缝一致性、大规模精确对应、可编辑性保持。这三行也正是本课题与既有研究的分界。</p>
+</div>
+
+<h3 id="s43">4.3 落地路径</h3>
+<p>建议分三阶段推进，其顺序按风险由低到高排列。</p>
+<ol>
+  <li><strong>阶段零，工具化。</strong>把表中"工具"一列做成批处理工具，替代手工重复劳动。<span class="b b-c">建议优先</span>　此阶段<strong>即使后续研究失败也具有独立价值</strong>，因为它解决的是确定性的、本来就该自动化的部分，不依赖任何未验证假设。</li>
+  <li><strong>阶段一，半自动推演。</strong>接入未覆盖区域的推演，但先只做"自动标注未覆盖区域 + 人工兜底"，不追求全自动。此阶段的目标是摸清推演质量的实际分布，而非交付成品。</li>
+  <li><strong>阶段二，取消兜底。</strong>仅当推演结果能自动通过接缝一致性检查时，才移除人工环节。</li>
+</ol>
+<p>这一顺序的意义在于：把"研究风险"与"工程收益"解耦。阶段零立刻产生收益，阶段一与阶段二的成败不影响阶段零。</p>
+
+<h3 id="s44">4.4 判断准则</h3>
+<p>后续每出现一个新环节，可用以下两个问题决定其归属。</p>
+<ol>
+  <li><strong>该环节的输出是否存在唯一正确答案？</strong>存在，则交确定性算法；不存在，即信息缺失而必须创造，则交生成模型。</li>
+  <li><strong>若出错，能否被自动检出？</strong>能，则可以放心交给生成模型，因为错误会被拦下；不能，则必须保留人工介入，或为其补一个可校验的约束。</li>
+</ol>
+<p>第二问尤其重要：生成模型能否被使用，往往不取决于它有多准，而取决于<strong>它的错误是否可被发现</strong>。这也是本文坚持把几何量交给确定性算法的根本原因。</p>
+</section>
+
+<section id="s5">
+<h2>5 验证方案</h2>
+
+<div class="warn">
+  <p class="boxlbl">状态声明</p>
+  <p>本节为<strong>方案设计</strong>，尚未产生任何实验数据。凡"实验表明"式的表述均不得出现在后续版本中，除非本节已被实际执行。</p>
+</div>
+
+<h3 id="s51">5.1 待验证假设</h3>
+<ul>
+  <li><strong>H1</strong>：跨接缝的图案断裂可被量化，且几何约束能显著降低该指标（对应 RQ1 与 C5）；</li>
+  <li><strong>H2</strong>：未覆盖区域的推演结果，在人工评判下达到可接受比例（对应 RQ2 与 C6）<span class="b">待补</span>　需定义"可接受"的判定标准与评判人数；</li>
+  <li><strong>H3</strong>：全流程可在无人逐面介入的条件下完成（对应 RQ3 与 C2）。</li>
+</ul>
+
+<h3 id="s52">5.2 数据</h3>
+<p><span class="b">待补</span>　需确定模型数量与复杂度梯度，是否包含高亏格、薄壁、自遮挡严重的样本；设计稿来源为人工绘制抑或生成；是否设置真值参照。</p>
+
+<h3 id="s53">5.3 评价指标</h3>
+<p class="tabcap">表 5　拟采用的评价指标</p>
+<table>
+  <tr><th style="width:22%">指标</th><th style="width:42%">说明</th><th>备注</th></tr>
+  <tr><td>接缝连续性</td><td>跨接缝处的颜色与结构跳变程度，越低越好</td><td>本文主指标</td></tr>
+  <tr><td>设计保真度</td><td>结果与设计稿的感知相似度</td><td>须与上一项权衡，并非越高越好</td></tr>
+  <tr><td>覆盖率</td><td>无空洞、无噪点的表面占比</td><td>—</td></tr>
+  <tr><td>人工可接受率</td><td>从业者盲评的通过比例</td><td>需预设评判规则</td></tr>
+</table>
+
+<div class="warn">
+  <p class="boxlbl">一条必须遵守的纪律</p>
+  <p>不得以"平滑度"类指标冒充质量指标。已有前例 [1]：该方法以全变分损失作为纹理质量的代理指标，而其自身数据即显示，平滑度达到最优时渲染质量反而下降。本文的接缝连续性指标必须直接测量<strong>接缝处的跳变</strong>，而非整体平滑程度。</p>
+</div>
+
+<h3 id="s54">5.4 对照与消融</h3>
+<p><span class="b">待补</span>　需设置三类基线：无几何约束的基线、仅投影无补全的基线、仅生成无锚点的基线。消融项至少包含表面邻接约束的开关与锚点权重的取值。</p>
+
+<h3 id="s55">5.5 预设失败条件</h3>
+<p>为避免事后找补，在此先行写定：若 H1 在预设数据上未达成，或 H2 的人工可接受率低于预设阈值，则判定路线 C 不成立，退回路线 A。阈值 <span class="b">待补</span>。</p>
+</section>
+
+<section id="s6">
+<h2>6 风险与局限</h2>
+<ul>
+  <li><strong>最可能失死的环节</strong><span class="b">假设</span>　延续，即 3.2 节子问题二。它属推演问题而非几何问题，且缺乏真值参照。</li>
+  <li><strong>指标风险</strong>：接缝连续性如何度量才不至于退化成平滑度，目前尚无定论。</li>
+  <li><strong>规模风险</strong><span class="b">待补</span>　数十万面量级下，沿表面度量的计算开销是否可接受，本文未做估算。</li>
+  <li><strong>样本偏差</strong>：现有判断来自单一从业者的实践，未经交叉验证。</li>
+  <li><strong>披露风险</strong>：若后续考虑专利申请，公开技术细节之前应先完成申请。</li>
+</ul>
+</section>
+
+<section id="s7">
+<h2>7 下一步</h2>
+<ol>
+  <li><strong>优先执行 4.3 节阶段零</strong>，即把确定性环节工具化。此项不依赖任何未验证假设，且无论后续研究成败均有收益；</li>
+  <li>补齐 3.1 节输入契约的细节，明确视图数量以及是否附带相机参数；</li>
+  <li>交叉验证 1.3 节的硬约束清单，确认其为行业共识而非个人习惯；</li>
+  <li>确定最小可行验证的规模，建议先取单一模型、单一设计稿，跑通端到端，再论指标；</li>
+  <li>执行第 5 节方案，或先执行其中的最小子集。</li>
+</ol>
+</section>
+
+<section id="app">
+<h2>附录　术语对照</h2>
+<p class="tabcap">表 6　常用说法与术语对照</p>
+<table>
+  <tr><th style="width:40%">常用说法</th><th>术语</th></tr>
+  <tr><td>把三维表面摊平成平面的坐标</td><td>UV 参数化</td></tr>
+  <tr><td>摊平后的一块连通区域</td><td>UV 岛 / chart</td></tr>
+  <tr><td>因必须剪开而形成的边界</td><td>接缝 / seam</td></tr>
+  <tr><td>沿表面走出来的距离</td><td>测地距离 / geodesic distance</td></tr>
+  <tr><td>把参考图作为条件喂给生成模型</td><td>条件注入 / conditioning</td></tr>
+  <tr><td>外观对了但位置对不上</td><td>外观分布与空间对应的分离</td></tr>
+</table>
+
+<h3>附录 B　待补素材清单</h3>
+<p>本文目前的插图均为<strong>概念示意图</strong>，用以说明结构与关系，不具备证据价值。以下位置应由真实素材占据，且只能由实际采集或工具产出得到：</p>
+<ol>
+  <li>真实模型的 UV 布局截图，用以显示接缝的实际密度与岛屿分布；</li>
+  <li>一份设计稿的正交三视图样例，作为输入契约的实例；</li>
+  <li>当前流程下的失败案例，尤其是接缝撕裂与图案错位；</li>
+  <li>接缝距离场热图，由 4.3 节阶段零的工具产出；</li>
+  <li>未覆盖区域的分布图，用以说明延续问题的实际规模。</li>
+</ol>
+<p>第 4、5 两项尤为关键：在产出这两张图之前，关于延续问题严重程度的任何判断都只是估计。</p>
+</section>
+
+<section id="refs">
+<h2>参考文献</h2>
+<ol class="ref">
+  <li>H. Li, D. Xiao, J. Zhang, R. Chen. UniTex: Single-chart texture reconstruction from multi-view images. <em>Computers &amp; Graphics</em>, 137:104599, 2026.</li>
+  <li>Y. Georgiou, M. Loizou, M. Averkiou, E. Kalogerakis. Im2SurfTex: Surface Texture Generation via Neural Backprojection of Multi-View Images. <em>Computer Graphics Forum</em>, 2025. arXiv:2502.14006.</li>
+  <li>A. Schier, R. Klein. Robust curve embedding in inconsistent surface meshes. <em>Computer Aided Geometric Design</em>, 2026. DOI: 10.1016/j.cagd.2026.102588.</li>
+  <li>DirectUV: Image-Conditioned UV Texture Generation with Surface-Aware Positional Encoding. arXiv:2609.34651, 2026.</li>
+</ol>
+</section>
+
+<p class="docfoot">
+  草案 v0.5　｜　2026 年 10 月　｜　AvroraCL<br>
+  本文采用 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">知识共享署名 4.0 国际许可协议（CC BY 4.0）</a>进行许可：可自由转载、改编与商用，须署名 AvroraCL。<br>
+  自存档研究文档，未投稿、未实现、未验证。
+</p>
+
+</article>
+
+</body>
+</html>

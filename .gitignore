@@ -1,0 +1,11 @@
+# 本地工作数据（笔记、临时脚本），不上传
+.workbuddy-ai/
+
+# 过程文档：大纲草案与研读笔记，暂不公开
+paper/outline.md
+研读笔记-UniTex.md
+
+# 参考论文 PDF 受出版方版权保护，不要上传到公开仓库
+*.pdf
+
+.DS_Store

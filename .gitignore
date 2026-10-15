@@ -8,4 +8,10 @@ paper/outline.md
 # 参考论文 PDF 受出版方版权保护，不要上传到公开仓库
 *.pdf
 
+# 实验素材：模型文件体积大，不上传（实验报告与结果图可上传）
+*.obj
+*.mtl
+*.blend
+*.blend1
+
 .DS_Store

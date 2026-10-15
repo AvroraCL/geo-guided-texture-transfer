@@ -283,7 +283,7 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 </figure>
 
 <h3 id="s12">1.2 断层所在：外观分布不等于空间对应</h3>
-<p>有一个容易混淆之处需要先行澄清。视觉模型对参考图所进行的处理，更准确的表述是<strong>条件注入</strong>，而非"理解三维结构"：结构控制、风格控制与参考图注入等机制所对齐的是<strong>外观分布</strong>，即"这张图应当长成什么样"；它们并不建立<strong>空间对应</strong>，即"这一纹样对应模型表面哪一具体位置、跨过接缝后接到何处"。</p>
+<p>有一个容易混淆之处需要先行澄清。视觉模型对参考图所进行的处理，更准确的表述是<strong>条件注入</strong>，而非"理解三维结构"：结构控制 [7]、风格控制与参考图注入 [8] 等机制所对齐的是<strong>外观分布</strong>，即"这张图应当长成什么样"；它们并不建立<strong>空间对应</strong>，即"这一纹样对应模型表面哪一具体位置、跨过接缝后接到何处"。</p>
 <p>而中间层所需要的恰恰是后者。这解释了为何单纯提升生成模型的能力无法自动补齐该环节：它不是分辨率问题，也不是语义理解问题，而是<strong>空间结构的错配</strong>。</p>
 
 <div class="box">
@@ -416,6 +416,7 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
 <h4>沿表面走的距离</h4>
 <p>两点之间怎么算远近？平时量的是直线——拿尺子一拉，穿过空气。但在物体表面上，"近不近"要看<strong>沿着表面走多久</strong>。拿一只碗来说，碗口对边的两点，直线一跨就到；可要是只允许贴着碗面走，就得绕下碗底再爬上来，远出好几倍。</p>
 <p>后文统一称它为<strong>测地距离</strong>。为什么非要在意它？因为判断"谁跟谁真的挨着"只能靠它——直线距离会骗人，穿过空气的那种近不算近。</p>
+<p>在网格上把它算出来有两类成熟做法：一类把最短路径当作波前逐点推进，直接算出距离场（快速行进法 [5]）；另一类借热传导来求，先让热量在表面上扩散，再据温度场反推距离，速度更快（热方法 [6]）。两者都已相当成熟，本身不是本文要解决的问题——本文只借用它的结果。</p>
 
 <figure>
 <svg viewBox="0 0 680 196" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
@@ -936,6 +937,10 @@ nav.toc a.s{padding-left:13px; font-size:12px; color:var(--muted)}
   <li>Y. Georgiou, M. Loizou, M. Averkiou, E. Kalogerakis. Im2SurfTex: Surface Texture Generation via Neural Backprojection of Multi-View Images. <em>Computer Graphics Forum</em>, 2025. arXiv:2502.14006.</li>
   <li>A. Schier, R. Klein. Robust curve embedding in inconsistent surface meshes. <em>Computer Aided Geometric Design</em>, 2026. DOI: 10.1016/j.cagd.2026.102588.</li>
   <li>DirectUV: Image-Conditioned UV Texture Generation with Surface-Aware Positional Encoding. arXiv:2609.34651, 2026.</li>
+  <li>R. Kimmel, J. A. Sethian. Computing geodesic paths on manifolds. <em>Proceedings of the National Academy of Sciences</em>, 95(15):8431–8435, 1998.</li>
+  <li>K. Crane, C. Weischedel, M. Wardetzky. Geodesics in heat: A new approach to computing distance based on heat flow. <em>ACM Transactions on Graphics</em>, 32(5):152, 2013.</li>
+  <li>L. Zhang, A. Rao, M. Agrawala. Adding conditional control to text-to-image diffusion models. <em>Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)</em>, 2023.</li>
+  <li>H. Ye, J. Zhang, S. Liu, X. Han, W. Yang. IP-Adapter: Text compatible image prompt adapter for text-to-image diffusion models. arXiv:2308.06721, 2023.</li>
 </ol>
 </section>
 

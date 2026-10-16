@@ -14,4 +14,17 @@ paper/outline.md
 *.blend
 *.blend1
 
+# exp05 中间数据：体积大（约 600MB），可由脚本重新生成，不上传
+experiments/exp05_spm/base/
+experiments/exp05_spm/proxy/
+experiments/exp05_spm/proxy_id/
+experiments/exp05_spm/proxy_100uv/
+experiments/exp05_spm/spm/
+experiments/exp05_spm/spm_id/
+experiments/exp05_spm/spm_100uv/
+experiments/exp05_spm/analysis/
+experiments/exp05_spm/analysis_id/
+experiments/exp05_spm/analysis_100uv/
+__pycache__/
+
 .DS_Store

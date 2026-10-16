@@ -1,0 +1,76 @@
+{
+  "label": "05",
+  "proxy": "proxy_05u.obj",
+  "faces_processed": 196070,
+  "texels": 4826915,
+  "hits": 4826915,
+  "empty_from_proxy": 1661681,
+  "dist_hist_edges": [
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.5,
+    1.0,
+    2.0,
+    "inf"
+  ],
+  "dist_hist": [
+    943341,
+    333667,
+    571457,
+    715405,
+    540459,
+    58228,
+    2651,
+    26,
+    0,
+    0,
+    0,
+    0
+  ],
+  "materials": {
+    "09d0ebdb-90bf-4fbb-aef2-dad2d961e05f": {
+      "filled": 738,
+      "ratio": 0.0007
+    },
+    "1767095f-214d-49d7-b324-b6fc99152e9a": {
+      "filled": 108573,
+      "ratio": 0.1035
+    },
+    "7b259035-b0df-4a7e-be6c-5590aa24261a": {
+      "filled": 1781,
+      "ratio": 0.0017
+    },
+    "7da99745-267c-4f3a-a15f-64b502e5d88e": {
+      "filled": 594940,
+      "ratio": 0.5674
+    },
+    "7e84b4a9-4f83-441a-a5d1-e62b4b0d90a9": {
+      "filled": 471764,
+      "ratio": 0.4499
+    },
+    "9f26fb59-7a05-455f-8d2c-a03577547d93": {
+      "filled": 352728,
+      "ratio": 0.3364
+    },
+    "bee39e06-ff19-4bc9-ac4f-ef9f3a497cd6": {
+      "filled": 833,
+      "ratio": 0.0008
+    },
+    "e0c5c4c8-8241-48f9-a018-6c42c685e2eb": {
+      "filled": 365205,
+      "ratio": 0.3483
+    },
+    "f_16xl": {
+      "filled": 651760,
+      "ratio": 0.6216
+    }
+  },
+  "blender": "5.1.2",
+  "total_seconds": 46.3
+}

@@ -23,6 +23,7 @@ import json
 import zlib
 import struct
 import time
+import math
 from mathutils import Vector
 
 OBJ = r"F:/项目/面向复杂三维网格的几何引导式正交视图纹理转译/F16XL.obj"
@@ -33,6 +34,9 @@ RATIO = float(os.environ.get("SPM_RATIO", "0.25"))
 TAG = os.environ.get("SPM_TAG") or ("%02d" % round(RATIO * 100))
 SKIP_UV = os.environ.get("SPM_SKIP_UV", "0") == "1"   # 保留原 UV（校准测试用）
 KEEP_MAT = os.environ.get("SPM_KEEP_MAT", "0") == "1"  # 导出材质（校准测试用）
+# UV 生成方式：smart（Smart UV Project，exp05 旧配置）/ unwrapNN（硬边标缝 + Angle-Based Unwrap）
+# exp06 对比结论：更激进的简化率 + unwrap60 是产出"简单 UV"的正道
+UV_MODE = os.environ.get("SPM_UV_MODE", "unwrap60")
 
 # wheel_ 与 gear_ 同属起落架系统，且其坐标数据躺在 y≈-28 的装配前位置，
 # 会把包围盒撑到 31.7（正确值应为 17.7），必须排除
@@ -134,18 +138,41 @@ size1 = hi1 - lo1
 print("简化后包围盒: (%s)" % ", ".join("%.3f" % v for v in size1))
 print("包围盒变化: (%s)" % ", ".join("%+.4f" % (size1[i] - size0[i]) for i in range(3)))
 
-# ---- 5. Smart UV Project（重新展开 UV）----
+# ---- 5. UV 生成 ----
 t0 = time.time()
 if SKIP_UV:
     print("跳过 UV 展开（保留原 UV）")
-else:
+elif UV_MODE == "smart":
     bpy.context.view_layer.objects.active = body
     body.select_set(True)
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='SELECT')
     bpy.ops.uv.smart_project(angle_limit=UV_ANGLE, island_margin=UV_MARGIN)
     bpy.ops.object.mode_set(mode='OBJECT')
-    print("UV 展开用时 %.1fs（angle=%s margin=%s）" % (time.time() - t0, UV_ANGLE, UV_MARGIN))
+    print("UV 展开用时 %.1fs（smart, angle=%s margin=%s）" % (time.time() - t0, UV_ANGLE, UV_MARGIN))
+else:
+    sharp_deg = float(UV_MODE.replace("unwrap", "") or 60.0)
+    # 清空旧 UV 层：实测 unwrap 受现有 UV 数据影响——
+    # 保留旧 UV 时展开面积 0.289 / 重叠率 5.4%；清空后 0.434 / 3.2%（同一网格同参数）
+    pme_data = body.data
+    while len(pme_data.uv_layers) > 0:
+        pme_data.uv_layers.remove(pme_data.uv_layers[0])
+    pme_data.uv_layers.new(name="UVMap")
+    bpy.context.view_layer.objects.active = body
+    body.select_set(True)
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='DESELECT')
+    bpy.ops.mesh.select_mode(type='EDGE')
+    bpy.ops.mesh.mark_seam(clear=True)
+    bpy.ops.mesh.edges_select_sharp(sharpness=math.radians(sharp_deg))
+    bpy.ops.mesh.mark_seam(clear=False)
+    bpy.ops.mesh.select_mode(type='FACE')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.uv.unwrap(method='ANGLE_BASED', margin=UV_MARGIN)
+    bpy.ops.uv.select_all(action='SELECT')
+    bpy.ops.uv.pack_islands(margin=UV_MARGIN)
+    bpy.ops.object.mode_set(mode='OBJECT')
+    print("UV 展开用时 %.1fs（unwrap %.0f°, margin=%s, 已清空旧 UV）" % (time.time() - t0, sharp_deg, UV_MARGIN))
 
 # ---- 6. 统计 UV 岛与面积 ----
 me = body.data
